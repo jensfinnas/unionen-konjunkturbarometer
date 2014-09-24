@@ -7,24 +7,24 @@
             <h4 class="panel-title">
               <i class="fa fa-caret-right"></i>
               <i class="fa fa-caret-down"></i>
-              {{key}}
+              {{name}}
               <span class="pull-right">Positiv</span>
             </h4>
           </div>
           <div id="{{id}}" class="panel-collapse collapse">
             <div class="panel-body">
-              <div class="panel-group" id="subpanel-{{key}}">
-                {{#each value.column_names}}
+              <div class="panel-group" id="subpanel-{{id}}">
+                {{#each subgroups }}
                 <div class="panel panel-default">
-                  <div class="panel-heading collapsed" data-toggle="collapse" data-target="#subpanel-{{this}}-{{../key}}" href="#subpanel-{{this}}-{{../key}}">
+                  <div class="panel-heading collapsed" data-toggle="collapse" data-target="#subpanel-{{../id}}-{{id}}" href="#subpanel-{{../id}}-{{id}}">
                     <h4 class="panel-title">
                       <i class="fa fa-caret-right"></i>
                       <i class="fa fa-caret-down"></i>
-                      {{this}}
+                      {{name}}
                     <span class="pull-right">Positiv</span>
                      </h4>
                   </div>
-                  <div id="subpanel-{{this}}-{{../key}}" class="panel-collapse collapse">
+                  <div id="subpanel-{{../id}}-{{id}}" class="panel-collapse collapse">
                     <div class="panel-body">
                       History
                    </div>
@@ -41,4 +41,4 @@
       e=o.createElement(i);r=o.getElementsByTagName(i)[0];
       e.src='//www.google-analytics.com/analytics.js';
       r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-      ga('create','UA-XXXXX-X');ga('send','pageview');</script> <script src=scripts/cb7562c6.plugins.js></script> <script src=scripts/69b07066.main.js></script>  
+      ga('create','UA-XXXXX-X');ga('send','pageview');</script> <script src=scripts/cb7562c6.plugins.js></script> <script src=scripts/bfde0f38.main.js></script>  
