@@ -109,9 +109,8 @@ var _tt;
 					values: values
 				};
 			})
-			var name = categoryNames[category];
 			return {
-				name: categoryName(category),
+				name: categoryNames[category],
 				subgroups: subgroups
 			}
 		}).filter(function(d) { return typeof d.name !== 'undefined'; });
