@@ -1,0 +1,16 @@
+
+#accordion .panel-heading {
+  cursor: pointer;
+}
+#accordion .panel-heading .fa-caret-down {
+  display: inline-block;
+}
+#accordion .panel-heading .fa-caret-right {
+  display: none;
+}
+#accordion .panel-heading.collapsed .fa-caret-down {
+  display: none;
+}
+#accordion .panel-heading.collapsed .fa-caret-right {
+  display: inline-block;
+}
