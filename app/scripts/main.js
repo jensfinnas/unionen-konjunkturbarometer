@@ -5,24 +5,23 @@ var _tt;
 	'use strict';
 	var spreadsheetUrl = '1JGCoMlEqUaspT-S_7UK-lVK8JfzHItdHyUQO_LYdFus';
 	var data = {};
+	var dictionary;
 	var color = d3.scale.linear()
     .domain([12.5, 0, -12.5])
     .range(["green", "white", "red"]);
 	var expectationCategories =[ 
-	{ v0: 7.5, v1: 12.5, label: 'Väldigt optimistisk', rotate: 20},
-	{ v0: 2.5, v1: 7.5, label: 'Optimistisk', rotate: 40},
-	{ v0: 0.0, v1: 2.5, label: 'Försiktigt optimistisk', rotate: 60},
-	{ v0: -2.5, v1: 0.0, label: 'Försiktigt pessimistisk', rotate: 120},
-	{ v0: -7.5, v1: -2.5, label: 'Pessimistisk', rotate: 140},
-	{ v0: -12.5, v1: -7.5, label: 'Väldigt pessimistisk', rotate: 160}
+	{ v0: 7.5, v1: 12.5, label: 'Väldigt optimistisk', labelDetermined: 'Väldigt optimistiskt', rotate: 20},
+	{ v0: 2.5, v1: 7.5, label: 'Optimistisk', labelDetermined: 'Optimistiskt', rotate: 40},
+	{ v0: 0.0, v1: 2.5, label: 'Försiktigt optimistisk', labelDetermined: 'Försiktigt optimistiskt', rotate: 60},
+	{ v0: -2.5, v1: 0.0, label: 'Försiktigt pessimistisk', labelDetermined: 'Försiktigt pessimistiskt', rotate: 120},
+	{ v0: -7.5, v1: -2.5, label: 'Pessimistisk', labelDetermined: 'Pessimistiskt', rotate: 140},
+	{ v0: -12.5, v1: -7.5, label: 'Väldigt pessimistisk', labelDetermined: 'Väldigt pessimistiskt', rotate: 160}
 	]
 	// Add color property
 	.map(function(d) {
-		console.log((d.v1 + d.v0) / 2)
 		d.color = color((d.v1 + d.v0) / 2);
 		return d;
 	});
-	console.log(expectationCategories)
 
 
 
@@ -82,31 +81,45 @@ var _tt;
 	}
 	// Draw the accordion interface
 	// Context is the data file aggregated at either industry or category level
-	function drawAccordion(data) {
-		console.log(data)
+	function drawAccordion(category, data) {
+		var selector = "#" + category;
 		var source = $('#konjunkturbarometern-template').html();
 		var template = Handlebars.compile(source);
-		var html = template(data);
-		$(".container").html(html);
+		var html = template({ groups: data, category: category});
+		$(selector).html(html);
 
 		// Init charts
-		d3.selectAll(".history-chart").each(function() {
+		d3.select(selector).selectAll(".history-chart").each(function() {
 			var el = d3.select(this);
 			var group = el.attr("data-group");
 			var subgroup = el.attr("data-subgroup");
 			// Get the historical values of the category
-			var values = data.first(function(d) {
-					return d.name == group;
-				}).subgroups.first(function(d) {
-					return d.name == subgroup;
-				}).values;
+			if (!subgroup) {
+				var values = data.first(function(d) {
+						return d.name == group;
+					}).values;
+			}
+			else {
+				var values = data.first(function(d) {
+						return d.name == group;
+					}).subgroups.first(function(d) {
+						return d.name == subgroup;
+					}).values;
 
-			new HistoryChart(el, values)
+			}
+			new HistoryChart(el, values, category, group, subgroup)
+			
 		})
 	}
 
 	var HistoryChart = (function() {
-	  function HistoryChart(elem, data) {
+	  function HistoryChart(
+	  	elem, // A d3 selected element where we draw the chart
+	  	data, // An array of date-value objects
+	  	category, // Industry/category 
+	  	group, // The name of the group
+	  	subgroup // The name of the subgroup
+	  	) {
 	    var self = this;
 	    var w, h, date0, date1;
 	    // Get size of element and define size of chart
@@ -128,8 +141,8 @@ var _tt;
 	    self.date0 = date0 = data[data.length - 1]['date']; // Oldest
 
 	    // Set value range (y axis)
-	    self.min = -12.5;
-	    self.max = 12.5;
+	    self.min = -9;
+	    self.max = 9;
 
 
 	    // Define x- and y-scale
@@ -255,23 +268,54 @@ var _tt;
 
 
 	    // Draw sentence
-	    self.getSentence = function(data) {
+	    self.getSentence = function(data, category, group, subgroup) {
+	    	// Get the last measured value and the previous
 	    	var valueNow = data[0].value;
 	    	var valueThen = data[1].value;
-	    	var direction = valueNow > valueThen ? "postivt" : "negativt";
+	    	// Get the current outlook
+	    	var outlookNow = getOutlookCategory(valueNow).labelDetermined.toLowerCase();
+	    	// Compare the outlook now to 6 months ago
+	    	var direction = valueNow > valueThen ? "postiv" : "negativ";
+	    	var relation = (valueNow > valueThen && valueNow > 0) || 
+	    		(valueNow < valueThen && valueNow < 0) ? 
+	    		'även' : 'dock';
 	    	var amount;
+	    	// Describe the difference in outlook in words
 	    	var diff = Math.abs(valueNow - valueThen);
-	    	if (diff < 0.5) { amount = "något"; }
-	    	else if (diff < 1) { amount = ""; }
-	    	else if (diff < 2) { amount = "betydligt"; }
+	    	if (diff < 1) { amount = "något"; }
+	    	else if (diff < 2) { amount = ""; }
+	    	else if (diff < 3) { amount = "betydligt"; }
 
-	    	return "Inom [industri] ser man "+ amount +" mer "+ direction + " på utvecklingen för [category] det kommande halvåret än för sex månader sedan.";
+	    	var sentence;
+	    	if (!subgroup) {
+	    		var subj = dictionary.get(group).determined.toLowerCase();
+
+	    		if (category == 'industry') {
+	    			sentence = 'Inom ' + subj + ' ser man just nu <strong>'+ outlookNow + '</strong> på framtiden. ';
+	    		}
+	    		else if (category == 'category') {
+	    			sentence = 'Unionens medlemmar ser just nu <strong>'+ outlookNow + '</strong> på framtiden för ' + subj + '. ';
+	    		}
+	    	}
+	    	else {
+	    		// Define subjects
+		    	if (category == 'industry') {
+		    		var groupStr = dictionary.get(group).determined.toLowerCase();
+		    		var subgroupStr = dictionary.get(subgroup).determined.toLowerCase();	
+		    	}
+		    	else if (category == 'category') {
+		    		var groupStr = dictionary.get(subgroup).determined.toLowerCase();
+			    	var subgroupStr = dictionary.get(group).determined.toLowerCase();		    		
+		    	};
+		    	// Write sentence
+		    	sentence = 'Inom ' + groupStr + ' ser man <strong>' + outlookNow + '</strong> på utvecklingen för ' + subgroupStr + ' det kommande halvåret.';
+	    	}
+	    	sentence += 'Man är '+relation+' <strong>' + amount + ' mera ' + direction + '</strong> än för sex månader sedan.';
+	    	return sentence;
 	    } 
 	    self.el.append("div")
 	    	.attr("class", "sentence")
-	    	.html(self.getSentence(data))
-
-
+	    	.html(self.getSentence(data, category, group, subgroup))
 	  }
 	  return HistoryChart;
 	})();
@@ -280,17 +324,30 @@ var _tt;
 	// 
 	function prepareData(_data) {
 		_data = _data.map(function(group) {
-			var subgroupValues = group.subgroups.map(function(d) {
+			// Css:ify the name
+			group.id = toClassName(group.name);
+			
+			// Get the historical means of the subgroups
+			var subGroupValues = group.subgroups.map(function(d) {
+				return d.values.map(function(d) { return d });
+			});
+			group.values = d3.transpose(subGroupValues).map(function(d) {
+				return {
+					date: d[0].date,
+					value: d3.mean(d.map(function(d) { return d.value }))
+				};
+			})
+
+			// Get the outlook as the mean of the latest subgroup values.
+			var subgroupLatestValues = group.subgroups.map(function(d) {
 				return d.values[0].value;
 			});
-
-			group.id = toClassName(group.name);
-			var outlook = getOutlookCategory(d3.mean(subgroupValues));
-			group.outlook = outlook;
+			group.outlook = getOutlookCategory(d3.mean(subgroupLatestValues));
+			
+			// Iterate the subgroups to css:ify their names and get outlook
 			group.subgroups.map(function(subgroup) {
 				subgroup.id = toClassName(subgroup.name);
-				var outlook = getOutlookCategory(subgroup.values[0].value);
-				subgroup.outlook = outlook;
+				subgroup.outlook = getOutlookCategory(subgroup.values[0].value);
 				return subgroup;
 			})
 			return group;
@@ -298,15 +355,8 @@ var _tt;
 		return _data;
 	}
 
-	function drawChart(selector) {
-		d3.select(selector)
-		d3.csv('foo_data.csv', function(err, resp) {
-
-		})
-	}
 
 	function initChart(resp, tt) {
-		_tt = tt;
 		/* Data format:
 		data = [
 			{  
@@ -335,9 +385,17 @@ var _tt;
 		]
 
 		*/
-		// A small hack to get the proper category names
+		// A small hack to get the proper category names from the Google Spreadsheet
+		// By default the category names are stripped of whitespaces etc
 		var categoryNames = resp['Nyckeltal'].elements[0];
 		delete resp['Nyckeltal'];
+
+		// Get dictionary
+		dictionary = d3.map({});
+		resp['Ordbok'].elements.forEach(function(d){
+			dictionary.set(d.word, d)
+		});
+		delete resp['Ordbok'];
 
 		// Transform data
 		// Aggregate industries (eg. Verkstadsindustri, Basindustri)
@@ -390,7 +448,8 @@ var _tt;
 		data.industry = prepareData(data.industry);
 		
 		// Draw interface
-		drawAccordion(data.category);
+		drawAccordion("industry", data.industry);
+		drawAccordion("category", data.category);
 	}
 
 	// Get data from AWS
