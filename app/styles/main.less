@@ -1,0 +1,88 @@
+@color-green: #328032;
+@color-base: #eee;
+@color-level-1: lighten(@color-base, 20%);
+@color-level-2: lighten(@color-base, 40%);
+
+body {
+}
+h1, h2, h3, h4 {
+	font-family: "Helvetica Neue", Helvetica, sans-serif;	
+}
+#accordion {
+	.panel {
+		margin: 0;
+		border:0;
+		.panel-heading {
+			border: 0;
+			border-radius: 0;
+			cursor: pointer;
+			background-color: @color-base;
+			// Arrows
+			.fa-caret-down {
+				display: inline-block;
+			}
+			.fa-caret-right {
+		  	display: none;
+			}
+
+		}
+		.panel-heading.collapsed {
+			.fa-caret-down {
+			  display: none;
+			} 
+			.fa-caret-right {
+			  display: inline-block;
+			}
+		}
+		.panel-body {
+			padding: 0;
+			border: 0;
+			.panel-group {
+				margin:0;	
+			}
+		}
+		.subpanel {
+			.panel-heading {
+				background-color: @color-level-1;
+				h4 {
+					font-size: 85%;
+				}
+			}
+		}
+	}
+}
+
+.history-chart {
+	width: 400px;
+	max-width: 400px;
+	.line {
+		fill: none;
+		stroke: #333;
+		stroke-width: 2px;
+	}
+	.dot {
+		circle {
+			stroke: #333;
+			stroke-width: 2px;
+			fill: #fff;
+		}
+	}
+	.domain {
+		display: none;
+	}
+}
+
+/* Custom rotation mixins for Font awesome */
+.fa-rotate(@degree) {
+	-webkit-transform: rotate(@degree);
+	-moz-transform: rotate(@degree);
+	-ms-transform: rotate(@degree);
+	-o-transform: rotate(@degree);
+	transform: rotate(@degree);
+}
+.fa-rotate-20 { .fa-rotate(20deg); color: green; }
+.fa-rotate-40 { .fa-rotate(40deg); color: green; }
+.fa-rotate-60 { .fa-rotate(60deg); color: green; }
+.fa-rotate-120 { .fa-rotate(120deg); color: red; }
+.fa-rotate-140 { .fa-rotate(140deg); color: red; }
+.fa-rotate-160 { .fa-rotate(160deg); color: red; }

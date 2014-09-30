@@ -1,16 +1,107 @@
-
-#accordion .panel-heading {
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+}
+#accordion .panel {
+  margin: 0;
+  border: 0;
+}
+#accordion .panel .panel-heading {
+  border: 0;
+  border-radius: 0;
   cursor: pointer;
+  background-color: #eeeeee;
 }
-#accordion .panel-heading .fa-caret-down {
+#accordion .panel .panel-heading .fa-caret-down {
   display: inline-block;
 }
-#accordion .panel-heading .fa-caret-right {
+#accordion .panel .panel-heading .fa-caret-right {
   display: none;
 }
-#accordion .panel-heading.collapsed .fa-caret-down {
+#accordion .panel .panel-heading.collapsed .fa-caret-down {
   display: none;
 }
-#accordion .panel-heading.collapsed .fa-caret-right {
+#accordion .panel .panel-heading.collapsed .fa-caret-right {
   display: inline-block;
+}
+#accordion .panel .panel-body {
+  padding: 0;
+  border: 0;
+}
+#accordion .panel .panel-body .panel-group {
+  margin: 0;
+}
+#accordion .panel .subpanel .panel-heading {
+  background-color: #ffffff;
+}
+#accordion .panel .subpanel .panel-heading h4 {
+  font-size: 85%;
+}
+.history-chart {
+  width: 400px;
+  max-width: 400px;
+}
+.history-chart .line {
+  fill: none;
+  stroke: #333;
+  stroke-width: 2px;
+}
+.history-chart .dot circle {
+  stroke: #333;
+  stroke-width: 2px;
+  fill: #fff;
+}
+.history-chart .domain {
+  display: none;
+}
+/* Custom rotation mixins for Font awesome */
+.fa-rotate-20 {
+  -webkit-transform: rotate(20deg);
+  -moz-transform: rotate(20deg);
+  -ms-transform: rotate(20deg);
+  -o-transform: rotate(20deg);
+  transform: rotate(20deg);
+  color: green;
+}
+.fa-rotate-40 {
+  -webkit-transform: rotate(40deg);
+  -moz-transform: rotate(40deg);
+  -ms-transform: rotate(40deg);
+  -o-transform: rotate(40deg);
+  transform: rotate(40deg);
+  color: green;
+}
+.fa-rotate-60 {
+  -webkit-transform: rotate(60deg);
+  -moz-transform: rotate(60deg);
+  -ms-transform: rotate(60deg);
+  -o-transform: rotate(60deg);
+  transform: rotate(60deg);
+  color: green;
+}
+.fa-rotate-120 {
+  -webkit-transform: rotate(120deg);
+  -moz-transform: rotate(120deg);
+  -ms-transform: rotate(120deg);
+  -o-transform: rotate(120deg);
+  transform: rotate(120deg);
+  color: red;
+}
+.fa-rotate-140 {
+  -webkit-transform: rotate(140deg);
+  -moz-transform: rotate(140deg);
+  -ms-transform: rotate(140deg);
+  -o-transform: rotate(140deg);
+  transform: rotate(140deg);
+  color: red;
+}
+.fa-rotate-160 {
+  -webkit-transform: rotate(160deg);
+  -moz-transform: rotate(160deg);
+  -ms-transform: rotate(160deg);
+  -o-transform: rotate(160deg);
+  transform: rotate(160deg);
+  color: red;
 }

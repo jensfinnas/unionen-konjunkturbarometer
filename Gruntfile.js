@@ -52,6 +52,10 @@ module.exports = function (grunt) {
         files: ['<%= config.app %>/styles/{,*/}*.css'],
         tasks: ['newer:copy:styles', 'autoprefixer']
       },
+      less: {
+      files: ['<%= config.app %>/styles/{,*/}*.less'],
+        tasks: ['less']
+      },
       livereload: {
         options: {
           livereload: '<%= connect.options.livereload %>'
@@ -59,6 +63,7 @@ module.exports = function (grunt) {
         files: [
           '<%= config.app %>/{,*/}*.html',
           '.tmp/styles/{,*/}*.css',
+          //'.tmp/styles/{,*/}*.less',
           '<%= config.app %>/images/{,*/}*'
         ]
       }
@@ -166,6 +171,16 @@ module.exports = function (grunt) {
         ignorePath: /^\/|\.\.\//,
         src: ['<%= config.app %>/index.html'],
         exclude: ['bower_components/bootstrap/dist/js/bootstrap.js']
+      }
+    },
+    less: {
+      dist: {
+        files: {
+          "<%= config.app %>/styles/main.css": ["<%= config.app %>/styles/main.less"]
+        },
+        options: {
+         // paths: ['<%= config.app %>/styles/']
+        }
       }
     },
 
@@ -341,7 +356,7 @@ module.exports = function (grunt) {
     }
   });
 
-
+  grunt.loadNpmTasks('grunt-contrib-less');
   grunt.registerTask('serve', 'start the server and preview your app, --allow-remote for remote access', function (target) {
     if (grunt.option('allow-remote')) {
       grunt.config.set('connect.options.hostname', '0.0.0.0');
@@ -353,6 +368,7 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'wiredep',
+      'less',
       'concurrent:server',
       'autoprefixer',
       'connect:livereload',
@@ -369,6 +385,7 @@ module.exports = function (grunt) {
     if (target !== 'watch') {
       grunt.task.run([
         'clean:server',
+        'less',
         'concurrent:test',
         'autoprefixer'
       ]);
