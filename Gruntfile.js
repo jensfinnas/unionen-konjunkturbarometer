@@ -32,7 +32,7 @@ module.exports = function (grunt) {
     watch: {
       bower: {
         files: ['bower.json'],
-        tasks: ['wiredep']
+        tasks: ['wiredep'],
       },
       js: {
         files: ['<%= config.app %>/scripts/{,*/}*.js'],
@@ -353,10 +353,33 @@ module.exports = function (grunt) {
         'imagemin',
         'svgmin'
       ]
+    },
+    bower: {
+      all: {
+        rjsConfig: '<%= config.app %>/config.js',
+        options: {
+          exclude: ['jquery']
+        }
+      }
+    },
+    requirejs: {
+      compile: {
+        options: {
+          baseUrl: "<%= config.app %>",
+          mainConfigFile: "<%= config.app %>/config.js",
+          name: "../bower_components/almond/almond", // assumes a production build using almond
+          out: "<%= config.app %>/konjunkturbarometern.min.js",
+          include: ['d3','handlebars','modernizr','tabletop','bootstrap','app'],
+          wrapShim: true
+        }
+      }
     }
   });
 
+  grunt.loadNpmTasks('grunt-bower-requirejs');
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-contrib-requirejs');
+
   grunt.registerTask('serve', 'start the server and preview your app, --allow-remote for remote access', function (target) {
     if (grunt.option('allow-remote')) {
       grunt.config.set('connect.options.hostname', '0.0.0.0');
@@ -416,6 +439,7 @@ module.exports = function (grunt) {
   grunt.registerTask('default', [
     'newer:jshint',
     'test',
+    'bower',
     'build'
   ]);
 };

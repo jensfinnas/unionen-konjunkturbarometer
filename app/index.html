@@ -10,10 +10,10 @@
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/icomoon.css">
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
     <!-- build:js scripts/vendor/modernizr.js -->
@@ -28,69 +28,14 @@
 
 
 
-    <div class="container">
-      <!-- Tabs -->
-      <ul class="nav nav-tabs" role="tablist">
-        <li class="active"><a href="#industry" role="tab" data-toggle="tab">Ordna efter industri</a></li>
-        <li><a href="#category" role="tab" data-toggle="tab">Ordna efter nyckeltal</a></li>
-      </ul>
-
-      <!-- Containers -->
-      <div class="tab-content">
-        <div class="tab-pane active" id="industry"></div>
-        <div class="tab-pane" id="category"></div>
-      </div>
+    <div id="konjunkturbarometern">
 
     </div>
 
-    <script id="konjunkturbarometern-template" type="text/x-handlebars-template">
-      <div class="panel-group" id="accordion">
-        {{#each groups}}
-        <div class="panel panel-default">
-          <div class="panel-heading collapsed" data-toggle="collapse" data-parent="#accordion" href="#{{id}}">
-            <h4 class="panel-title">
-              <i class="fa fa-caret-right"></i>
-              <i class="fa fa-caret-down"></i>
-              {{name}}
-              <span class="pull-right">
-                {{outlook.label}}
-                <i class="fa fa-caret-up fa-rotate-{{outlook.rotate}}"></i>
-              </span>
-            </h4>
-          </div>
-          <div id="{{id}}" class="panel-collapse collapse">
-            <div class="panel-body">
-              <div class="history-chart" data-group="{{name}}" data-category="{{../category}}">
-              </div>
 
-              <div class="panel-group subpanel" id="subpanel-{{id}}">
-                {{#each subgroups }}
-                <div class="panel panel-default">
-                  <div class="panel-heading collapsed" data-toggle="collapse" data-target="#subpanel-{{../id}}-{{id}}" href="#subpanel-{{../id}}-{{id}}">
-                    <h4 class="panel-title">
-                      <i class="fa fa-caret-right"></i>
-                      <i class="fa fa-caret-down"></i>
-                      {{name}}
-                    <span class="pull-right">
-                      {{outlook.label}}
-                      <i class="fa fa-caret-up fa-rotate-{{outlook.rotate}}"></i>
-                    </span>
-                     </h4>
-                  </div>
-                  <div id="subpanel-{{../id}}-{{id}}" class="panel-collapse collapse">
-                    <div class="panel-body">
-                      <div class="history-chart" data-group="{{../name}}" data-subgroup="{{name}}" data-category="{{../../category}}"></div>
-                   </div>
-                  </div>
-                </div>
-                {{/each}}
-              </div>
-            </div>
-          </div>
-        </div>
-        {{/each}}
-      </div>
-    </script>
+<!--    <script id="konjunkturbarometern-template" type="text/x-handlebars-template">
+      
+    </script>-->
 
 
     <!-- build:js(.) scripts/vendor.js -->
@@ -99,11 +44,10 @@
     <script src="bower_components/tabletop/src/tabletop.js"></script>
     <script src="bower_components/handlebars/handlebars.js"></script>
     <script src="bower_components/d3/d3.js"></script>
-    <script src="bower_components/html2canvas/build/html2canvas.min.js"></script>
     <script src="bower_components/less/dist/less-1.7.5.js"></script>
+    <script src="bower_components/d3-tip/index.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
-
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <!--

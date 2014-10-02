@@ -1,25 +1,43 @@
 
-var d;
-var _tt;
-(function() {
+var chart = (function() {
 	'use strict';
 	var spreadsheetUrl = '1JGCoMlEqUaspT-S_7UK-lVK8JfzHItdHyUQO_LYdFus';
 	var data = {};
 	var dictionary;
-	var color = d3.scale.linear()
-    .domain([12.5, 0, -12.5])
-    .range(["green", "white", "red"]);
+
+  Handlebars.registerHelper('dictionary', function(str, column, toLowerCase) {
+  	str = dictionary.get(str)[column];
+  	if (toLowerCase) str = str.toLowerCase();
+	  return str;
+	});
+
+// Get CSS attributes from stylesheet
+function getStyleRuleValue(style, selector, sheet) {
+	    var sheets = typeof sheet !== 'undefined' ? [sheet] : document.styleSheets;
+	    for (var i = 0, l = sheets.length; i < l; i++) {
+	        var sheet = sheets[i];
+	        if( !sheet.cssRules ) { continue; }
+	        for (var j = 0, k = sheet.cssRules.length; j < k; j++) {
+	            var rule = sheet.cssRules[j];
+	            if (rule.selectorText && rule.selectorText.split(',').indexOf(selector) !== -1) {
+	                return rule.style[style];
+	            }
+	        }
+	    }
+	    return null;
+	}
+
 	var expectationCategories =[ 
-	{ v0: 7.5, v1: 12.5, label: 'Väldigt optimistisk', labelDetermined: 'Väldigt optimistiskt', rotate: 20},
-	{ v0: 2.5, v1: 7.5, label: 'Optimistisk', labelDetermined: 'Optimistiskt', rotate: 40},
-	{ v0: 0.0, v1: 2.5, label: 'Försiktigt optimistisk', labelDetermined: 'Försiktigt optimistiskt', rotate: 60},
-	{ v0: -2.5, v1: 0.0, label: 'Försiktigt pessimistisk', labelDetermined: 'Försiktigt pessimistiskt', rotate: 120},
-	{ v0: -7.5, v1: -2.5, label: 'Pessimistisk', labelDetermined: 'Pessimistiskt', rotate: 140},
-	{ v0: -12.5, v1: -7.5, label: 'Väldigt pessimistisk', labelDetermined: 'Väldigt pessimistiskt', rotate: 160}
+	{ v0: 7.5, v1: 12.5, label: 'Väldigt optimistisk', labelDetermined: 'Väldigt optimistiskt', className: 'p3'},
+	{ v0: 2.5, v1: 7.5, label: 'Optimistisk', labelDetermined: 'Optimistiskt', className: 'p2'},
+	{ v0: 0.0, v1: 2.5, label: 'Försiktigt optimistisk', labelDetermined: 'Försiktigt optimistiskt', className: 'p1'},
+	{ v0: -2.5, v1: 0.0, label: 'Försiktigt pessimistisk', labelDetermined: 'Försiktigt pessimistiskt', className: 'n1'},
+	{ v0: -7.5, v1: -2.5, label: 'Pessimistisk', labelDetermined: 'Pessimistiskt', className: 'n2'},
+	{ v0: -12.5, v1: -7.5, label: 'Väldigt pessimistisk', labelDetermined: 'Väldigt pessimistiskt', className: 'n3'}
 	]
 	// Add color property
 	.map(function(d) {
-		d.color = color((d.v1 + d.v0) / 2);
+		d.color = getStyleRuleValue('color','.'+d.className);
 		return d;
 	});
 
@@ -55,6 +73,28 @@ var _tt;
 	   } 
 	}
 
+	// Get query string
+	var queryString = function () {
+	  var query_string = {};
+	  var query = window.location.search.substring(1);
+	  var vars = query.split("&");
+	  for (var i=0;i<vars.length;i++) {
+	    var pair = vars[i].split("=");
+	      // If first entry with this name
+	    if (typeof query_string[pair[0]] === "undefined") {
+	      query_string[pair[0]] = pair[1];
+	      // If second entry with this name
+	    } else if (typeof query_string[pair[0]] === "string") {
+	      var arr = [ query_string[pair[0]], pair[1] ];
+	      query_string[pair[0]] = arr;
+	      // If third or later entry with this name
+	    } else {
+	      query_string[pair[0]].push(pair[1]);
+	    }
+	  } 
+	    return query_string;
+	}();
+
 	var locale = d3.locale({
 	  "decimal": ",",
 	  "thousands": "\xa0",
@@ -69,8 +109,16 @@ var _tt;
 	  "months": ["januari", "februari", "mars", "april", "maj", "juni", "juli", "augusti", "september", "oktober", "november", "december"],
 	  "shortMonths": ["jan", "feb", "mars", "apr", "maj", "jun", "jul", "aug", "sept", "okt", "nov", "dec"]
 	});
+	var dateMonthYearFormat = locale.timeFormat("%B %Y");
+
 
 	var parseDate = locale.timeFormat("%Y-%m-%d").parse;
+
+	var Template = function() {
+	    this.cached = {};
+	};
+	var T = new Template();
+	
 
 	// Get exppectation cat from value
 	var getOutlookCategory = function(value) {
@@ -82,39 +130,79 @@ var _tt;
 	// Draw the accordion interface
 	// Context is the data file aggregated at either industry or category level
 	function drawAccordion(category, data) {
+		// Get groups and subgroups that should be shown at start from query string
+		var qs = queryString;
+		var show = qs.show;
+		if (show) {
+			// Separate groups to be shown by comma
+			show.split(",").forEach(function(str) {
+				// Define a a subgroup as eg. "handel_export"
+				str = str.split("_");
+				// If no 
+				var subgroup;
+				var group = data.first(function(d) {
+					return str[0] == d.id;
+				});
+				if (str.length == 2) {
+					if (group) {
+						subgroup = group.subgroups.first(function(d) {
+							return str[1] == d.id;
+						})
+					}
+				}
+				// Adds the "in" class that bootstrap uses to expand panels
+				if (group) {
+					group.show = "in";
+				}
+				if (subgroup) {
+					subgroup.show = "in";
+				}
+			})
+		}
+
 		var selector = "#" + category;
-		var source = $('#konjunkturbarometern-template').html();
-		var template = Handlebars.compile(source);
-		var html = template({ groups: data, category: category});
-		$(selector).html(html);
+		T.render('widget', function(t) {
+	  		$(selector).html( t({ groups: data, category: category}) );
 
-		// Init charts
-		d3.select(selector).selectAll(".history-chart").each(function() {
-			var el = d3.select(this);
-			var group = el.attr("data-group");
-			var subgroup = el.attr("data-subgroup");
-			// Get the historical values of the category
-			if (!subgroup) {
-				var values = data.first(function(d) {
-						return d.name == group;
-					}).values;
-			}
-			else {
-				var values = data.first(function(d) {
-						return d.name == group;
-					}).subgroups.first(function(d) {
-						return d.name == subgroup;
-					}).values;
+	  		if (qs.cat) {
+	  			d3.selectAll(".nav.nav-tabs li").classed("active", function() {
+	  				return d3.select(this).attr("data-category") == qs.cat;
+	  			})
+	  			d3.selectAll(".tab-pane").classed("active", function() {
+	  				return d3.select(this).attr("id") == qs.cat;
+	  			})
+	  		}
 
-			}
-			new HistoryChart(el, values, category, group, subgroup)
-			
-		})
+
+	  		// Init charts
+	  		d3.select(selector).selectAll(".history-chart").each(function() {
+	  			var container = d3.select(this);
+	  			var group = container.attr("data-group");
+	  			var subgroup = container.attr("data-subgroup");
+	  			// Get the historical values of the category
+	  			if (!subgroup) {
+	  				var values = data.first(function(d) {
+	  						return d.name == group;
+	  					}).values;
+	  			}
+	  			else {
+	  				var values = data.first(function(d) {
+	  						return d.name == group;
+	  					}).subgroups.first(function(d) {
+	  						return d.name == subgroup;
+	  					}).values;
+
+	  			}
+	  			new HistoryChart(container, values, category, group, subgroup);
+	  			d3.selectAll(".loading").style("display", "none");
+	  			
+	  		})
+    });		
 	}
 
 	var HistoryChart = (function() {
 	  function HistoryChart(
-	  	elem, // A d3 selected element where we draw the chart
+	  	container, // A d3 selected element with a .history and .summary div where we draw the chart
 	  	data, // An array of date-value objects
 	  	category, // Industry/category 
 	  	group, // The name of the group
@@ -123,18 +211,22 @@ var _tt;
 	    var self = this;
 	    var w, h, date0, date1;
 	    // Get size of element and define size of chart
-	    self.el = elem;
-	    var containerWidth = self.el[0][0].offsetWidth;
-	    containerWidth = 400;
+	    self.container = container;
+	    self.el = container.select(".chart");
+	    self.summary = container.select(".summary");
+	    var containerWidth = d3.select("#accordion")[0][0].offsetWidth * 0.9;
 	    self.margin = { 
 	      top: 10, 
 	      bottom: 30, 
 	      right: 20, 
-	      left: 30
+	      left: 10
 	    };
 	    var m = self.margin;
 	    self.width = w = (containerWidth - m.left - m.right);
 	    self.height = h =  w * 0.35;
+
+	    // Update text in chart intro
+	    container.select('.chart-intro .group-name').text(dictionary.get(group).determined.toLowerCase());
 	    
 	    // Get date range (x axis)
 	    self.date1 = date1 = data[0]['date']; // Latest
@@ -162,7 +254,10 @@ var _tt;
 	    // Main canvas
 	    self.chart = self.svg
 	      .append('g')
-	      .attr("transform", "translate(" + m.left + "," + m.top + ")");
+	      .attr("transform", "translate(" + m.left + "," + m.top + ")")
+	      .on("mouseout", function() {
+	        self.tooltip.style("visibility", "hidden")
+	      })
 
 
 	    // Init voronoi
@@ -187,7 +282,16 @@ var _tt;
 	    // Voronoify points
 	    var voronoiPoints = voronoi(points);
 
-	    // 
+	    // Init tooltips
+	    self.tooltip = d3.select("body")
+      .append("div")
+      .attr("class", "d3-tooltip")
+      .style("position", "absolute")
+      .style("z-index", "10")
+      .style("visibility", "hidden")
+      .on("mouseover", function() {
+        return self.tooltip.style("visibility", "hidden")
+      });
 
 	    // Add background
 	    self.bgAreas = self.chart.selectAll("g.bg-area")
@@ -200,10 +304,28 @@ var _tt;
 	    	});
 
 	    self.bgAreas.append("rect")
-	    	.attr("width", w)
+	    	.attr("x", -self.margin.left)
+	    	.attr("width", self.margin.left)
 	    	.attr("height", function(d) { return Math.abs(self.y(d.v1) - self.y(d.v0)); })
 	    	.attr("fill", function(d) { return d.color; })
-	    	.attr("stroke", "white");
+
+	    self.bgAreas.append("line")
+	    	.attr("x1", 0)
+	    	.attr("x2", w)
+	    	.attr("y1", function(d) { return d.v1 >0 ? 0 : self.y(d.v0) - self.y(d.v1); })
+	    	.attr("y2", function(d) { return d.v1 >0 ? 0 : self.y(d.v0) - self.y(d.v1); })
+	    	.attr("stroke", function(d) { return d.color; })
+	    	.attr("class", "guideline");
+
+	    // Zero line
+	    self.chart.append("line")
+	    	.attr("x1", 0)
+	    	.attr("x2", w)
+	    	.attr("y1", self.y(0))
+	    	.attr("y2", self.y(0))
+	    	.attr("class", "guideline zero")
+	    	.attr("transform","translate(1,0)");
+
 
 
 	    // Add x axis
@@ -249,7 +371,7 @@ var _tt;
         .attr("class", "voronoi")
         .attr("opacity", .000001)
         .attr("d", function(d,i) { return "M" + d.join("L") + "Z"; })
-        .on("mouseover", function(d) {
+        /*.on("mouseover", function(d) {
         	var elem = this.parentNode.childNodes[0];
         	// Get the dot element from DOM
         	var dot = d3.select(elem);
@@ -264,16 +386,48 @@ var _tt;
         	var d = dot[0][0].__data__;
         	// Largen the poll circle
         	dot.transition().duration(200).attr("r", self.dotSize);
+        })*/
+        .on("mouseover", function(){
+          // Positioning of tooltip
+          var elem = this.parentNode.childNodes[0];
+          var bodyRect = document.body.getBoundingClientRect();
+          var elemRect = elem.getBoundingClientRect();
+          var offset = { 
+                top: elemRect.top - bodyRect.top,
+                left: elemRect.left - bodyRect.left
+              };
+
+          // Get the dot element from DOM
+          var dot = d3.select(elem);
+          var d = dot[0][0].__data__;
+          var outlook = d.point[2].outlook;
+          // Largen the poll circle
+          dot.transition().duration(200).attr("r", self.dotSize * 2);
+          return self.tooltip
+            // Set tooltip content
+            .html('<table><tr><td><span class="icon-arrow outlook ' + outlook.className + '"></span></td><td><date>' + dateMonthYearFormat(d.point[2].date) + '</date> ' + outlook.label+'</td></tr></table>')
+            .style("visibility", "visible")
+            .style("top", (offset.top - 65)+"px")
+            .style("left", function() { 
+              var tooltipWidth = this.getBoundingClientRect().width;
+              return (offset.left - tooltipWidth / 2)+"px"})
+        
         })
+        // Hide tooltip on mouse out
+        .on("mouseout", function(d,el,a) {
+          var dot = d3.select(this.parentNode.childNodes[0]);
+          dot.transition().duration(200).attr("r", self.dotSize)
+        });
 
 
 	    // Draw sentence
-	    self.getSentence = function(data, category, group, subgroup) {
+	    self.getSentences = function(data, category, group, subgroup) {
 	    	// Get the last measured value and the previous
 	    	var valueNow = data[0].value;
 	    	var valueThen = data[1].value;
 	    	// Get the current outlook
-	    	var outlookNow = getOutlookCategory(valueNow).labelDetermined.toLowerCase();
+	    	var outlook = getOutlookCategory(valueNow);
+	    	var outlookNow = outlook.labelDetermined.toLowerCase();
 	    	// Compare the outlook now to 6 months ago
 	    	var direction = valueNow > valueThen ? "postiv" : "negativ";
 	    	var relation = (valueNow > valueThen && valueNow > 0) || 
@@ -286,17 +440,22 @@ var _tt;
 	    	else if (diff < 2) { amount = ""; }
 	    	else if (diff < 3) { amount = "betydligt"; }
 
-	    	var sentence;
+	    	var sentences = {};
+	    	function getOutlookWithIcon(outlook) {
+	    		return '<strong>' + outlook.label.toLowerCase() + '</strong>'; //' <span class="icon-arrow outlook '+ outlook.className + '"></span>';
+	    	}
+	    	// Sentences for groups
 	    	if (!subgroup) {
 	    		var subj = dictionary.get(group).determined.toLowerCase();
 
 	    		if (category == 'industry') {
-	    			sentence = 'Inom ' + subj + ' ser man just nu <strong>'+ outlookNow + '</strong> på framtiden. ';
+	    			sentences.long = 'Inom ' + subj + ' ser man just nu '+ getOutlookWithIcon(outlook) +'  på framtiden. ';
 	    		}
 	    		else if (category == 'category') {
-	    			sentence = 'Unionens medlemmar ser just nu <strong>'+ outlookNow + '</strong> på framtiden för ' + subj + '. ';
+	    			sentences.long = 'Unionens medlemmar ser just nu '+ getOutlookWithIcon(outlook) +' på framtiden för ' + subj + '. ';
 	    		}
 	    	}
+	    	// Sentences for sub groups
 	    	else {
 	    		// Define subjects
 		    	if (category == 'industry') {
@@ -307,15 +466,19 @@ var _tt;
 		    		var groupStr = dictionary.get(subgroup).determined.toLowerCase();
 			    	var subgroupStr = dictionary.get(group).determined.toLowerCase();		    		
 		    	};
-		    	// Write sentence
-		    	sentence = 'Inom ' + groupStr + ' ser man <strong>' + outlookNow + '</strong> på utvecklingen för ' + subgroupStr + ' det kommande halvåret.';
+		    	// Write sentences.long
+		    	sentences.long = 'Inom ' + groupStr + ' ser man <strong>' + outlookNow + '</strong> på utvecklingen för ' + subgroupStr + ' det kommande halvåret.';
 	    	}
-	    	sentence += 'Man är '+relation+' <strong>' + amount + ' mera ' + direction + '</strong> än för sex månader sedan.';
-	    	return sentence;
+	    	sentences.long += 'Man är '+relation+' <strong>' + amount + ' mer ' + direction + '</strong> än för sex månader sedan.';
+	    	sentences.title = 'Trenden: ' + amount + ' mer ' + direction + ' än senast';
+	    	return sentences;
 	    } 
-	    self.el.append("div")
-	    	.attr("class", "sentence")
-	    	.html(self.getSentence(data, category, group, subgroup))
+	    var sentences = self.getSentences(data, category, group, subgroup);
+	    self.summary.select(".sentence")
+	    	.html(sentences.long);
+
+	    self.container.select(".history h5")
+	    	.html(sentences.title);
 	  }
 	  return HistoryChart;
 	})();
@@ -452,24 +615,58 @@ var _tt;
 		drawAccordion("category", data.category);
 	}
 
-	// Get data from AWS
-	$(document).ready( function() { 
-		/*d3.csv('foo_data.csv', function(err, resp) {
-			console.log(resp);
-			data = resp.map(function(d) {
-				return { date: parseDate(d['Datum']), value: +d['Försäljningspriser'] };
+		// Get data from AWS
+		$(document).ready( function() {
+
+			$.extend(Template.prototype, {
+			    render: function(name, callback) {
+			        if (T.isCached(name)) {
+			            callback(T.cached[name]);
+			        } else {
+			            $.get(T.urlFor(name), function(raw) {
+			                T.store(name, raw);
+			                T.render(name, callback);
+			            });
+			        }
+			    },
+			    renderSync: function(name, callback) {
+			        if (!T.isCached(name)) {
+			            T.fetch(name);
+			        }
+			        T.render(name, callback);
+			    },
+			    prefetch: function(name) {
+			        $.get(T.urlFor(name), function(raw) { 
+			            T.store(name, raw);
+			        });
+			    },
+			    fetch: function(name) {
+			        // synchronous, for those times when you need it.
+			        if (! T.isCached(name)) {
+			            var raw = $.ajax({'url': T.urlFor(name), 'async': false}).responseText;
+			            T.store(name, raw);         
+			        }
+			    },
+			    isCached: function(name) {
+			        return !!T.cached[name];
+			    },
+			    store: function(name, raw) {
+			        T.cached[name] = Handlebars.compile(raw);
+			    },
+			    urlFor: function(name) {
+			        return "templates/"+ name + ".hbs";
+			    }
 			});
-			new HistoryChart(d3.select("#history"),data)
-				
-		})*/
-		
-		Tabletop.init({ 
-			key: spreadsheetUrl,
-			callback: initChart,
-			proxy: 'https://s3-eu-west-1.amazonaws.com/tabletop-proxy/unionen-konjunkturbarometern-stage/',
-			debug: true
+
+			T.render('main', function(t) {
+				$('#konjunkturbarometern').html( t() );
+
+				Tabletop.init({ 
+					key: spreadsheetUrl,
+					callback: initChart,
+					proxy: 'https://s3-eu-west-1.amazonaws.com/tabletop-proxy/unionen-konjunkturbarometern-stage/',
+					debug: true
+				});
+			})		
 		});
-	});	
 })();
-
-
