@@ -28,12 +28,13 @@ function getStyleRuleValue(style, selector, sheet) {
 	}
 
 	var expectationCategories =[ 
-	{ v0: 7.5, v1: 12.5, label: 'Väldigt optimistisk', labelDetermined: 'Väldigt optimistiskt', className: 'p3'},
-	{ v0: 2.5, v1: 7.5, label: 'Optimistisk', labelDetermined: 'Optimistiskt', className: 'p2'},
-	{ v0: 0.0, v1: 2.5, label: 'Försiktigt optimistisk', labelDetermined: 'Försiktigt optimistiskt', className: 'p1'},
-	{ v0: -2.5, v1: 0.0, label: 'Försiktigt pessimistisk', labelDetermined: 'Försiktigt pessimistiskt', className: 'n1'},
-	{ v0: -7.5, v1: -2.5, label: 'Pessimistisk', labelDetermined: 'Pessimistiskt', className: 'n2'},
-	{ v0: -12.5, v1: -7.5, label: 'Väldigt pessimistisk', labelDetermined: 'Väldigt pessimistiskt', className: 'n3'}
+	{ v0: 10.45, v1: 12.5, label: 'Väldigt optimistisk', labelDetermined: 'Väldigt optimistiskt', className: 'p3'},
+	{ v0: 5.45, v1: 10.45, label: 'Optimistisk', labelDetermined: 'Optimistiskt', className: 'p2'},
+	{ v0: 0.45, v1: 5.45, label: 'Försiktigt optimistisk', labelDetermined: 'Försiktigt optimistiskt', className: 'p1'},
+	{ v0: -0.45, v1: 0.45, label: 'Neutral', labelDetermined: 'Neutralt', className: 'neutral'},
+	{ v0: -5.45, v1: -0.45, label: 'Försiktigt pessimistisk', labelDetermined: 'Försiktigt pessimistiskt', className: 'n1'},
+	{ v0: -10.45, v1: -5.45, label: 'Pessimistisk', labelDetermined: 'Pessimistiskt', className: 'n2'},
+	{ v0: -12.5, v1: -10.45, label: 'Väldigt pessimistisk', labelDetermined: 'Väldigt pessimistiskt', className: 'n3'}
 	]
 	// Add color property
 	.map(function(d) {
