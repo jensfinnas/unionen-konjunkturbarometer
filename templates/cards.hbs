@@ -1,0 +1,64 @@
+{{#each groups}}
+	<div class="card {{category}}" id="{{id}}" data-category="{{category}}" data-group="{{id}}">
+		<div class="card-wrapper"> 
+			<div class="card-section title">
+				<div class="wrapper">
+					<a href="#{{category}}_{{id}}" class="overview-title">
+						<h3>{{name}}<span class="icon-arrow-right"></span></h3>
+
+					</a>
+					<h4 class="full-report-title">
+						{{name}}
+						<a href="#{{category}}" class="back pull-right">
+							<span class="icon-arrow-left"></span>Tillbaka till översikten
+						</a>
+					</h4>
+				</div>
+			</div>
+			<!-- Outlook today -->
+			<div class="card-section current-outlook">
+				<div class="wrapper">
+					<h4>Framtidsutsikt: {{outlook.label}}</h4>
+					<div class="card-row">
+						<div class="cell icon">
+							<span class="icon-arrow {{outlook.className}} outlook"></span>
+						</div>
+						<div class="cell">
+							<div class="overview">
+								<label>Framtidsutsikt:</label>
+								<span class="value">{{outlook.label}}</span>
+							</div>
+
+							<div class="description">
+								<p>Den här branschen innefattar bla bla blad. Här kommer en beskrivning på branschen.</p>
+								<p>I vår senaste mätning den XX.XX.XXXX bedömdes framtiden för {{dictionary name 'determined' 'true'}} som {{toLowerCase outlook.label }}.</p></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- History chart -->
+			<div class="card-section trend">
+				<div class="wrapper">
+					<h4>Utvecklingen sedan 2011: XXX</h4>
+					<div class="history">
+						<!-- Get history chart template -->
+						<div class="history-chart" data-group="{{id}}"data-category="{{../category}}">
+							{{> history}}
+						</div>
+					</div>
+					<div class="full-report-link">
+						<a href="#{{category}}_{{id}}">Detaljerad rapport<span class="icon-arrow-right"></span></a>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-section full-report">
+				<div class="wrapper">
+					<h4 class="industry">Framtidstro på olika delar av verksamheten inom {{dictionary name 'determined' 'true'}}</h4>
+					<h4 class="category">Framtidstro på {{dictionary name 'determined' 'true'}} branschvis</h4>
+					<div class="subgroups"></div>
+				</div>
+			</div>
+		</div>	
+	</div>
+{{/each}}
