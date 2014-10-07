@@ -8,7 +8,10 @@
           <td>
             <span class="icon-arrow {{outlook.className}} outlook"></span>
           </td> 
-          <td class="title">{{name}}</td>
+          <td class="title">
+            {{name}}
+            <span class="hide-collapsed outlook-label">{{outlook.label}}</span>
+          </td>
           <td class="open-close">
             <span class="icon-plus"></span>
             <span class="icon-minus"></span>
@@ -25,7 +28,9 @@
 
         <!-- Group share -->
         <div class="share">
-          <a class="btn btn-xs btn-default" href="?show={{../id}}&cat={{../category}}">Dela mig</a>
+          <span class="icon-facebook">
+          <span class="icon-twitter">
+          <span class="icon-mail">
         </div>
 
       </div>

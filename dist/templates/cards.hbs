@@ -3,22 +3,34 @@
 		<div class="card-wrapper"> 
 			<div class="card-section title">
 				<div class="wrapper">
-					<a href="#{{category}}_{{id}}" class="overview-title">
+					<!-- Overview title -->
+					<a href="#{{category}}_{{id}}" class="overview-title hide-in-full-report">
 						<h3>{{name}}<span class="icon-arrow-right"></span></h3>
 
 					</a>
-					<h4 class="full-report-title">
+
+					<!-- Full report title -->
+					
+
+					<h3 class="full-report-title hide-in-overview">
+						<div class="share pull-right">
+							<span class="icon-facebook">
+							<span class="icon-twitter">
+							<span class="icon-mail">
+						</div>
 						{{name}}
-						<a href="#{{category}}" class="back pull-right">
-							<span class="icon-arrow-left"></span>Tillbaka till översikten
-						</a>
-					</h4>
+						
+					</h3>
+					<a href="#{{category}}" class="back hide-in-overview">
+						<span class="icon-arrow-left"></span>Tillbaka till översikten
+					</a>
+
 				</div>
 			</div>
 			<!-- Outlook today -->
 			<div class="card-section current-outlook">
 				<div class="wrapper">
-					<h4>Framtidsutsikt: {{outlook.label}}</h4>
+					<h4 class="hide-in-overview">Framtidsutsikt: {{outlook.label}}</h4>
 					<div class="card-row">
 						<div class="cell icon">
 							<span class="icon-arrow {{outlook.className}} outlook"></span>
@@ -31,7 +43,7 @@
 
 							<div class="description">
 								<p>Den här branschen innefattar bla bla blad. Här kommer en beskrivning på branschen.</p>
-								<p>I vår senaste mätning den XX.XX.XXXX bedömdes framtiden för {{dictionary name 'determined' 'true'}} som {{toLowerCase outlook.label }}.</p></div>
+								<p>I vår senaste mätning den {{ latestUpdate }} bedömdes framtiden för {{dictionary name 'determined' 'true'}} som {{toLowerCase outlook.label }}.</p></div>
 						</div>
 					</div>
 				</div>
@@ -39,7 +51,6 @@
 			<!-- History chart -->
 			<div class="card-section trend">
 				<div class="wrapper">
-					<h4>Utvecklingen sedan 2011: XXX</h4>
 					<div class="history">
 						<!-- Get history chart template -->
 						<div class="history-chart" data-group="{{id}}"data-category="{{../category}}">
