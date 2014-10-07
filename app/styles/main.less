@@ -2,6 +2,8 @@
 
 @color-grey: #F8F8F8;
 @color-darkgrey: darken(#F8F8F8, 15%);
+@color-grey-text: #999;
+@color-green: #328032;
 
 @color-p3: #5BC05A; // Most positive
 @color-p2: #8BD825; 
@@ -11,7 +13,7 @@
 @color-n2: #F06E30; 
 @color-n3: #ED4630; // Most negative
 
-@screen-sm-min: 786px;
+@screen-sm-min: 470px;
 @screen-md-min: 992px;
 @screen-lg-min: 1200px;
 
@@ -30,28 +32,42 @@
 	background-image: -ms-linear-gradient(left, @startColor, @endColor);
 	background-image: -o-linear-gradient(left, @startColor, @endColor);
 }
+/* Custom rotation mixins for Font awesome */
+.rotate(@degree) {
+	-webkit-transform: rotate(@degree);
+	-moz-transform: rotate(@degree);
+	-ms-transform: rotate(@degree);
+	-o-transform: rotate(@degree);
+	transform: rotate(@degree);
+}
+
 
 body {
 	margin:0;
 	padding: 0;
 	font-size: 13px;
 }
-h1, h2, h3, h4 {
+h1, h2, h3, h4, h5, .nav li {
 	font-family: "Helvetica Neue", Helvetica, sans-serif;	
 }
+// Helpers
+.card:not(.selected) .hide-in-overview {
+	display: none !important;
+}
+.card.selected .hide-in-full-report {
+	display: none !important;
+}
+
+
 #header {
-	.horizontal-gradient(#3F8731, #499B29);
-	color: #fff;
-	height: 200px;
-	position: relative;
+	text-align: center;
 	
 	.wrapper {
 		padding: 10px;
-		position: absolute;
-		bottom: 0;
 
 		h1 {
 			margin-bottom: 5px;
+			color: @color-green;
 		}
 		.subtitle {
 			font-size: 150%;
@@ -65,6 +81,8 @@ h1, h2, h3, h4 {
 	margin-top: 10px;
 
 	li {
+		font-size: 15px;
+		
 		border: 1px solid @color-grey;
 		border-bottom: 0;
 		float: none;
@@ -101,7 +119,8 @@ h1, h2, h3, h4 {
 		width: 100%;
 		position: relative;
 		.card {
-			width: 50%;
+			width: 100%;
+			// Padding between cards
 			padding-bottom: 10px;
 			padding-right: 10px;
 			display: inline-block;
@@ -115,7 +134,7 @@ h1, h2, h3, h4 {
 					border-bottom: 1px solid @color-grey; 
 					
 					.wrapper {
-						padding: 10px;
+						padding: 15px;
 
 						label {
 							text-transform: uppercase;
@@ -129,16 +148,13 @@ h1, h2, h3, h4 {
 				}
 				.card-section.title {
 					.wrapper {
-						padding-top: 15px;
+						padding-top: 20px;
 					}
 					h3 {
 						margin: 0;
 						.animate(0.3s);
 						font-weight: 400;
 						font-size: 16px;
-					}
-					.full-report-title {
-						display: none;
 					}
 				}
 				.card-section.current-outlook {
@@ -166,11 +182,11 @@ h1, h2, h3, h4 {
 				}
 
 				// Hide h4 headings 
-				.card-section {
+				/*.card-section {
 					h4 {
 						display: none;
 					}
-				}
+				}*/
 
 				.card-row {
 					display: table;
@@ -193,14 +209,17 @@ h1, h2, h3, h4 {
 			.card-section.title {
 				h3 {
 					font-size: 200%;
+					margin-bottom: 10px;
 				}
 				.overview-title {
 					display: none;
 				}
 				.full-report-title {
-					display: block;
 					.back {
 						font-size: 13px;
+					}
+					.share {
+						font-size: 70%;
 					}
 				}
 			}
@@ -258,10 +277,12 @@ h1, h2, h3, h4 {
 	}
 }
 // Cards: Media queries
-@media (max-width: @screen-sm-min) {
-	#cards {
-		.card {
-			width: 100%;
+@media screen and (min-width: @screen-sm-min) {
+	.content {
+		#cards {
+			.card {
+				width: 50%;
+			}
 		}
 	}
 }
@@ -278,6 +299,8 @@ h1, h2, h3, h4 {
 		.panel-heading, .modal-header {
 			border: 0;
 			border-radius: 0;
+			padding-left: 0;
+			padding-right: 0;
 			cursor: pointer;
 			background-color: #fff;
 
@@ -305,15 +328,22 @@ h1, h2, h3, h4 {
 
 			// Text
 			.title, .modal-title {
-				font-size: 150%;
+				font-size: 115%;
 				line-height: 1.2em;
 				.animate(0.3s);
+				font-weight: 400;
+
+				.outlook-label {
+					font-size: 80%;
+					display: block;
+					color: @color-grey-text;
+				}
 			}
 
 			// Icons
 			.icon-minus, .icon-plus {
-				color: #fff;
 				font-size: 70%;
+				color: @color-darkgrey;
 				.animate(0.3s);
 			}
 			.icon-minus {
@@ -330,17 +360,14 @@ h1, h2, h3, h4 {
 			background-color: #fff;
 			
 			.title {
-				font-size: 100%;
+				font-size: 90%;
 			}
 
 			.outlook {
-				font-size: 200%;
+				font-size: 160%;
 				display: inline-block;
 			}
 
-			.icon-minus, .icon-plus {
-				color: @color-darkgrey;
-			}
 
 			.icon-minus {
 			  display: none;
@@ -434,13 +461,15 @@ h1, h2, h3, h4 {
 	.dot {
 		display: none;
 	}
+	text {
+		fill: @color-grey-text; 
+	}
 	.y-label {
 		text-transform: uppercase;
 		color: #D6D6D6;
 		font-size: 10px;
-	}
-
-	
+		display: none;
+	}	
 }
 
 .card.selected {
@@ -464,8 +493,13 @@ h1, h2, h3, h4 {
 			stroke: @color-darkgrey;
 			stroke-dasharray: 5, 5;
 		}
+		.y-label {
+			display: block;
+		}
+		.chart {
+			padding: 10px 0;
+		}
 	}
-
 }
 
 // Tooltip
@@ -488,14 +522,6 @@ h1, h2, h3, h4 {
 
 }
 
-/* Custom rotation mixins for Font awesome */
-.rotate(@degree) {
-	-webkit-transform: rotate(@degree);
-	-moz-transform: rotate(@degree);
-	-ms-transform: rotate(@degree);
-	-o-transform: rotate(@degree);
-	transform: rotate(@degree);
-}
 .p3 { .rotate(20deg); background-color: @color-p3; }
 .p2 { .rotate(40deg); background-color: @color-p2; }
 .p1 { .rotate(60deg); background-color: @color-p1; }
@@ -505,3 +531,6 @@ h1, h2, h3, h4 {
 .n3 { .rotate(160deg); background-color: @color-n3; }
 
 
+#latest-update {
+	font-size: 11px;
+}

@@ -14,6 +14,10 @@
 	Handlebars.registerHelper('toLowerCase', function(str) {
 		return str.toLowerCase();
 	})
+    Handlebars.registerHelper('latestUpdate', function(str) {
+        var date = parseDate($('#latest-update date').attr('value'));
+        return formatDateString(date);
+    })
 
 // Get CSS attributes from stylesheet
 function getStyleRuleValue(style, selector, sheet) {
@@ -77,6 +81,12 @@ function getStyleRuleValue(style, selector, sheet) {
 	     return null; 
 	   } 
 	}
+
+    // Capitalise first letter in string
+    function capitalise(str) {
+      str = str.replace(/^\s\s*/, '');
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
 
 	// Get query string
 	var queryString = function () {
@@ -161,9 +171,11 @@ function getStyleRuleValue(style, selector, sheet) {
 	  "shortMonths": ["jan", "feb", "mars", "apr", "maj", "jun", "jul", "aug", "sept", "okt", "nov", "dec"]
 	});
 	var dateMonthYearFormat = locale.timeFormat("%B %Y");
+    var formatDateString = locale.timeFormat("%e %B %Y");
 
 
 	var parseDate = locale.timeFormat("%Y-%m-%d").parse;
+    var formatDate = locale.timeFormat("%Y-%m-%d");
 
 
 	// KONJUNKTUBAROMETERN FUNCTIONS
@@ -183,7 +195,8 @@ function getStyleRuleValue(style, selector, sheet) {
 		// Draw mini chart unless card is in selected state ("full report mode")
 		self.mini = mini = !$(container[0][0]).parents('.card').hasClass('selected');
 
-    var containerWidth = mini ? 45 : 400;
+
+    var containerWidth = mini ? 45 : document.body.clientWidth * .85;
     self.margin = { 
     	top: mini ? 0 : 3, 
     	bottom: mini ? 0 : 30, 
@@ -442,9 +455,10 @@ function getStyleRuleValue(style, selector, sheet) {
     	var amount;
     	// Describe the difference in outlook in words
     	var diff = Math.abs(valueNow - valueThen);
-    	if (diff < 1) { amount = "Något"; }
-    	else if (diff < 2) { amount = ""; }
-    	else if (diff < 3) { amount = "Betydligt"; }
+    	if (diff < 0.5) { amount = "Marginellt"; }
+    	else if (diff < 1.5) { amount = "Något"; }
+      else if (diff < 2.5) { amount = ""; }
+    	else if (diff >= 2.5) { amount = "Betydligt"; }
 
     	var sentences = {};
     	function getOutlookWithIcon(outlook) {
@@ -477,13 +491,19 @@ function getStyleRuleValue(style, selector, sheet) {
 	    }
 	    sentences.long += 'Man är '+relation+' <strong>' + amount + ' mer ' + direction + '</strong> än för sex månader sedan.';
 	    sentences.title = 'Trenden: ' + amount + ' mer ' + direction + ' än senast';
-	    sentences.trend = amount + ' mer ' + direction;
-	    return sentences;
+	    sentences.trend = capitalise(amount + ' mer ') + direction;
+	    sentences.trendTitle = capitalise(amount + ' mer ') + direction + ' än senaste';
+        return sentences;
 	  } 
 	  var sentences = self.getSentences(data, category, group, subgroup);
 
 	  self.container.select(".trend .value")
-	  .html(sentences.trend);
+	   .html(sentences.trend);
+
+    self.container.select('h4 .trend')
+      .html(sentences.trendTitle)
+
+
 	}
 
 	HistoryChart.prototype.redraw = function() {
@@ -619,6 +639,7 @@ return HistoryChart;
 
 				filter += '.selected';
 				$cards.isotope({ filter: filter });
+                ri.messageParent();
 			})
 		}
 		else {
@@ -626,6 +647,7 @@ return HistoryChart;
 				redrawHistoryChart($currentCard);
 			}
 			$cards.isotope({ filter: filter });
+            ri.messageParent();
 		}
 	}
 
@@ -837,6 +859,11 @@ return HistoryChart;
 		//drawAccordion("category", data.category);
 
 		d3.selectAll(".loading").style("display", "none");
+
+        // Update latest update date2
+        var dateValue = formatDate(data[0].values[0].date);
+        $("#latest-update").html("<strong>Senaste mätningen:</strong> <date value="+dateValue+">"+dateValue+"</date>");
+
 		drawCards();
 	}
 	function parseHash() {

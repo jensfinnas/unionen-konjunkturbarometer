@@ -1,5 +1,6 @@
 /* COLORS */
 /* MIXINS */
+/* Custom rotation mixins for Font awesome */
 body {
   margin: 0;
   padding: 0;
@@ -8,27 +9,26 @@ body {
 h1,
 h2,
 h3,
-h4 {
+h4,
+h5,
+.nav li {
   font-family: "Helvetica Neue", Helvetica, sans-serif;
 }
+.card:not(.selected) .hide-in-overview {
+  display: none !important;
+}
+.card.selected .hide-in-full-report {
+  display: none !important;
+}
 #header {
-  background-color: #3f8731;
-  background-image: -webkit-gradient(linear, left top, right top, from(#3f8731), to(#499b29));
-  background-image: -webkit-linear-gradient(left, #3f8731, #499b29);
-  background-image: -moz-linear-gradient(left, #3f8731, #499b29);
-  background-image: -ms-linear-gradient(left, #3f8731, #499b29);
-  background-image: -o-linear-gradient(left, #3f8731, #499b29);
-  color: #fff;
-  height: 200px;
-  position: relative;
+  text-align: center;
 }
 #header .wrapper {
   padding: 10px;
-  position: absolute;
-  bottom: 0;
 }
 #header .wrapper h1 {
   margin-bottom: 5px;
+  color: #328032;
 }
 #header .wrapper .subtitle {
   font-size: 150%;
@@ -39,6 +39,7 @@ h4 {
   margin-top: 10px;
 }
 .nav li {
+  font-size: 15px;
   border: 1px solid #f8f8f8;
   border-bottom: 0;
   float: none;
@@ -74,7 +75,7 @@ h4 {
   position: relative;
 }
 .content #cards .card {
-  width: 50%;
+  width: 100%;
   padding-bottom: 10px;
   padding-right: 10px;
   display: inline-block;
@@ -83,12 +84,17 @@ h4 {
   border-radius: 5px;
   border: 1px solid #d2d2d2;
   background-color: #fff;
+  /*.card-section {
+					h4 {
+						display: none;
+					}
+				}*/
 }
 .content #cards .card .card-wrapper .card-section {
   border-bottom: 1px solid #f8f8f8;
 }
 .content #cards .card .card-wrapper .card-section .wrapper {
-  padding: 10px;
+  padding: 15px;
 }
 .content #cards .card .card-wrapper .card-section .wrapper label {
   text-transform: uppercase;
@@ -98,7 +104,7 @@ h4 {
   margin-bottom: 0;
 }
 .content #cards .card .card-wrapper .card-section.title .wrapper {
-  padding-top: 15px;
+  padding-top: 20px;
 }
 .content #cards .card .card-wrapper .card-section.title h3 {
   margin: 0;
@@ -108,9 +114,6 @@ h4 {
   -ms-transition: all 0.3s ease;
   font-weight: 400;
   font-size: 16px;
-}
-.content #cards .card .card-wrapper .card-section.title .full-report-title {
-  display: none;
 }
 .content #cards .card .card-wrapper .card-section.current-outlook .outlook {
   font-size: 300%;
@@ -126,9 +129,6 @@ h4 {
   margin-top: 10px;
 }
 .content #cards .card .card-wrapper .card-section.full-report {
-  display: none;
-}
-.content #cards .card .card-wrapper .card-section h4 {
   display: none;
 }
 .content #cards .card .card-wrapper .card-row {
@@ -147,15 +147,16 @@ h4 {
 }
 .content #cards .card.selected .card-section.title h3 {
   font-size: 200%;
+  margin-bottom: 10px;
 }
 .content #cards .card.selected .card-section.title .overview-title {
   display: none;
 }
-.content #cards .card.selected .card-section.title .full-report-title {
-  display: block;
-}
 .content #cards .card.selected .card-section.title .full-report-title .back {
   font-size: 13px;
+}
+.content #cards .card.selected .card-section.title .full-report-title .share {
+  font-size: 70%;
 }
 .content #cards .card.selected .card-section.current-outlook .cell {
   vertical-align: top;
@@ -193,9 +194,9 @@ h4 {
 .content .card.category .category {
   display: inherit;
 }
-@media (max-width: 786px) {
-  #cards .card {
-    width: 100%;
+@media screen and (min-width: 470px) {
+  .content #cards .card {
+    width: 50%;
   }
 }
 .accordion,
@@ -221,6 +222,8 @@ h4 {
 .modal .modal-content .modal-header {
   border: 0;
   border-radius: 0;
+  padding-left: 0;
+  padding-right: 0;
   cursor: pointer;
   background-color: #fff;
 }
@@ -296,12 +299,33 @@ h4 {
 .modal .panel .modal-header .modal-title,
 .accordion .modal-content .modal-header .modal-title,
 .modal .modal-content .modal-header .modal-title {
-  font-size: 150%;
+  font-size: 115%;
   line-height: 1.2em;
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
   -ms-transition: all 0.3s ease;
+  font-weight: 400;
+}
+.accordion .panel .panel-heading .title .outlook-label,
+.modal .panel .panel-heading .title .outlook-label,
+.accordion .modal-content .panel-heading .title .outlook-label,
+.modal .modal-content .panel-heading .title .outlook-label,
+.accordion .panel .modal-header .title .outlook-label,
+.modal .panel .modal-header .title .outlook-label,
+.accordion .modal-content .modal-header .title .outlook-label,
+.modal .modal-content .modal-header .title .outlook-label,
+.accordion .panel .panel-heading .modal-title .outlook-label,
+.modal .panel .panel-heading .modal-title .outlook-label,
+.accordion .modal-content .panel-heading .modal-title .outlook-label,
+.modal .modal-content .panel-heading .modal-title .outlook-label,
+.accordion .panel .modal-header .modal-title .outlook-label,
+.modal .panel .modal-header .modal-title .outlook-label,
+.accordion .modal-content .modal-header .modal-title .outlook-label,
+.modal .modal-content .modal-header .modal-title .outlook-label {
+  font-size: 80%;
+  display: block;
+  color: #999999;
 }
 .accordion .panel .panel-heading .icon-minus,
 .modal .panel .panel-heading .icon-minus,
@@ -319,8 +343,8 @@ h4 {
 .modal .panel .modal-header .icon-plus,
 .accordion .modal-content .modal-header .icon-plus,
 .modal .modal-content .modal-header .icon-plus {
-  color: #fff;
   font-size: 70%;
+  color: #d2d2d2;
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
@@ -357,24 +381,14 @@ h4 {
 .modal .panel .panel-heading.collapsed .title,
 .accordion .modal-content .panel-heading.collapsed .title,
 .modal .modal-content .panel-heading.collapsed .title {
-  font-size: 100%;
+  font-size: 90%;
 }
 .accordion .panel .panel-heading.collapsed .outlook,
 .modal .panel .panel-heading.collapsed .outlook,
 .accordion .modal-content .panel-heading.collapsed .outlook,
 .modal .modal-content .panel-heading.collapsed .outlook {
-  font-size: 200%;
+  font-size: 160%;
   display: inline-block;
-}
-.accordion .panel .panel-heading.collapsed .icon-minus,
-.modal .panel .panel-heading.collapsed .icon-minus,
-.accordion .modal-content .panel-heading.collapsed .icon-minus,
-.modal .modal-content .panel-heading.collapsed .icon-minus,
-.accordion .panel .panel-heading.collapsed .icon-plus,
-.modal .panel .panel-heading.collapsed .icon-plus,
-.accordion .modal-content .panel-heading.collapsed .icon-plus,
-.modal .modal-content .panel-heading.collapsed .icon-plus {
-  color: #d2d2d2;
 }
 .accordion .panel .panel-heading.collapsed .icon-minus,
 .modal .panel .panel-heading.collapsed .icon-minus,
@@ -518,10 +532,14 @@ h4 {
 .history-chart .dot {
   display: none;
 }
+.history-chart text {
+  fill: #999999;
+}
 .history-chart .y-label {
   text-transform: uppercase;
   color: #D6D6D6;
   font-size: 10px;
+  display: none;
 }
 .card.selected .history-chart .dot {
   display: block;
@@ -542,6 +560,12 @@ h4 {
   stroke: #d2d2d2;
   stroke-dasharray: 5, 5;
 }
+.card.selected .history-chart .y-label {
+  display: block;
+}
+.card.selected .history-chart .chart {
+  padding: 10px 0;
+}
 .d3-tooltip {
   padding: 7px 10px;
   font-size: 85%;
@@ -558,7 +582,6 @@ h4 {
   font-size: 200%;
   margin-right: 5px;
 }
-/* Custom rotation mixins for Font awesome */
 .p3 {
   -webkit-transform: rotate(20deg);
   -moz-transform: rotate(20deg);
@@ -614,4 +637,7 @@ h4 {
   -o-transform: rotate(160deg);
   transform: rotate(160deg);
   background-color: #ed4630;
+}
+#latest-update {
+  font-size: 11px;
 }
