@@ -11,6 +11,10 @@
 @color-n2: #F06E30; 
 @color-n3: #ED4630; // Most negative
 
+@screen-sm-min: 786px;
+@screen-md-min: 992px;
+@screen-lg-min: 1200px;
+
 /* MIXINS */
 .animate(@duration) {
 	-webkit-transition: all @duration ease;
@@ -30,6 +34,7 @@
 body {
 	margin:0;
 	padding: 0;
+	font-size: 13px;
 }
 h1, h2, h3, h4 {
 	font-family: "Helvetica Neue", Helvetica, sans-serif;	
@@ -56,39 +61,225 @@ h1, h2, h3, h4 {
 }
 .nav {
 	border-bottom: 0;
+	text-align: center;
+	margin-top: 10px;
 
 	li {
-		border: 0;
+		border: 1px solid @color-grey;
+		border-bottom: 0;
+		float: none;
+		display: inline-block;
 		a {
 			color: inherit;
 			border: 0;
 		}
 		a:hover {
-			background-color: @color-grey;
+			background-color: inherit;
 		}
 	}
 	li.active { 
 		border:0;
-		a, a:hover {
+		a {
 			background-color: @color-grey;
-			border: 0;
+			border: inherit;
+		}		
+		a:hover {
+			background-color: @color-grey;
+			border: inherit;
+		}
+	}
+}
+.content {
+	padding: 15px;
+	background-color: @color-grey;
+
+	.loading {
+		font-size: 30px;
+	}
+
+	#cards {
+		width: 100%;
+		position: relative;
+		.card {
+			width: 50%;
+			padding-bottom: 10px;
+			padding-right: 10px;
+			display: inline-block;
+
+			.card-wrapper {
+				border-radius: 5px;
+				border: 1px solid @color-darkgrey;
+				background-color: #fff;
+
+				.card-section {
+					border-bottom: 1px solid @color-grey; 
+					
+					.wrapper {
+						padding: 10px;
+
+						label {
+							text-transform: uppercase;
+							font-size: 70%;
+							color: #979797;
+							display: block;
+							margin-bottom: 0;
+						}
+
+					}
+				}
+				.card-section.title {
+					.wrapper {
+						padding-top: 15px;
+					}
+					h3 {
+						margin: 0;
+						.animate(0.3s);
+						font-weight: 400;
+						font-size: 16px;
+					}
+					.full-report-title {
+						display: none;
+					}
+				}
+				.card-section.current-outlook {
+					.outlook {
+						font-size: 300%;
+						margin-right: 10px;
+					}
+					.description {
+						display: none;
+					}
+				}
+				.card-section.trend {
+					.wrapper {
+						padding-bottom: 15px;
+
+						.full-report-link {
+							margin-top: 10px;
+
+						}
+					}
+				}
+
+				.card-section.full-report {
+					display: none;
+				}
+
+				// Hide h4 headings 
+				.card-section {
+					h4 {
+						display: none;
+					}
+				}
+
+				.card-row {
+					display: table;
+					.cell {
+						display: table-cell;
+						vertical-align: middle;
+					}
+					.cell.icon {
+						width: 58px;
+					}
+				}
+			}
+		}
+
+		// SELECTED CARD
+		.card.selected {
+			width: 100%;
+			height: auto;
+
+			.card-section.title {
+				h3 {
+					font-size: 200%;
+				}
+				.overview-title {
+					display: none;
+				}
+				.full-report-title {
+					display: block;
+					.back {
+						font-size: 13px;
+					}
+				}
+			}
+			.card-section.current-outlook {
+				.cell {
+					vertical-align: top;
+				}
+				.description {
+					display: block;
+					
+					p {
+						margin-bottom: 3px;
+					}
+				}
+				.overview {
+					display: none;
+				}
+			}
+			.card-section.trend {
+				.cell.description {
+					display: none;
+				}
+				.full-report-link {
+					display: none;
+				}
+			}
+			.card-section.full-report {
+				display: block;
+
+			}
+			.card-section {
+					h4 {
+						display: block;
+					}
+				}
+
+		}
+	}
+
+	.card.industry {
+		.industry {
+			display: inherit;
+		}
+		.category {
+			display: none !important;
+		}
+	}
+	.card.category {
+		.industry {
+			display: none !important;
+		}
+		.category {
+			display: inherit;
+		}
+	}
+}
+// Cards: Media queries
+@media (max-width: @screen-sm-min) {
+	#cards {
+		.card {
+			width: 100%;
 		}
 	}
 }
 
-#accordion, .modal {
+.accordion, .modal {
 	color: #333;
 	.panel, .modal-content {
 		margin: 0;
 		border:0;
 		border-radius: 0;
+		box-shadow: none;
 
 		// Accordion headings
 		.panel-heading, .modal-header {
 			border: 0;
 			border-radius: 0;
 			cursor: pointer;
-			background-color: @color-darkgrey;
+			background-color: #fff;
 
 			span {
 				vertical-align: middle;
@@ -135,8 +326,8 @@ h1, h2, h3, h4 {
 
 		// Collapsed group heading
 		.panel-heading.collapsed {
-			border-bottom: 1px solid @color-darkgrey;
-			background-color: @color-grey;
+			border-bottom: 1px solid @color-grey;
+			background-color: #fff;
 			
 			.title {
 				font-size: 100%;
@@ -162,7 +353,7 @@ h1, h2, h3, h4 {
 		// Content
 		.panel-body, .modal-body {
 			padding: 0;
-			border: 0;
+			border: 0 !important;
 			.panel-group {
 				margin:0;	
 			}
@@ -230,31 +421,53 @@ h1, h2, h3, h4 {
 
 /* ICONS */
 
-
+// HISTORY CHART
 .history-chart {
 	.line {
 		fill: none;
 		stroke: #333;
-		stroke-width: 2px;
+		stroke-width: 1px;
+	}
+	.axis {
+		display: none;
 	}
 	.dot {
-		circle {
+		display: none;
+	}
+	.y-label {
+		text-transform: uppercase;
+		color: #D6D6D6;
+		font-size: 10px;
+	}
+
+	
+}
+
+.card.selected {
+	.history-chart {
+		.dot {
+			display: block;
 			stroke: #333;
 			stroke-width: 2px;
 			fill: #fff;
 		}
+		.axis {
+			display: block;
+		}
+		.domain {
+			display: none;
+		}
+		.guideline {
+			stroke-width: 1px;
+		}
+		.guideline.zero {
+			stroke: @color-darkgrey;
+			stroke-dasharray: 5, 5;
+		}
 	}
-	.domain {
-		display: none;
-	}
-	.guideline {
-		stroke-width: 2px;
-	}
-	.guideline.zero {
-		stroke: @color-darkgrey;
-		stroke-dasharray: 5, 5;
-	}
+
 }
+
 // Tooltip
 .d3-tooltip {
 	padding: 7px 10px;
@@ -283,12 +496,12 @@ h1, h2, h3, h4 {
 	-o-transform: rotate(@degree);
 	transform: rotate(@degree);
 }
-.p3 { .rotate(20deg); color: @color-p3; }
-.p2 { .rotate(40deg); color: @color-p2; }
-.p1 { .rotate(60deg); color: @color-p1; }
-.neutral { .rotate(120deg); color: @color-n1; }
-.n1 { .rotate(120deg); color: @color-n1; }
-.n2 { .rotate(140deg); color: @color-n2; }
-.n3 { .rotate(160deg); color: @color-n3; }
+.p3 { .rotate(20deg); background-color: @color-p3; }
+.p2 { .rotate(40deg); background-color: @color-p2; }
+.p1 { .rotate(60deg); background-color: @color-p1; }
+.neutral { .rotate(90deg); background-color: @color-neutral; }
+.n1 { .rotate(120deg); background-color: @color-n1; }
+.n2 { .rotate(140deg); background-color: @color-n2; }
+.n3 { .rotate(160deg); background-color: @color-n3; }
 
 

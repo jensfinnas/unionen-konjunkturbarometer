@@ -1,0 +1,35 @@
+<div class="panel-group accordion" id="accordion-{{../group}}">
+  {{#each groups}}
+  <div class="panel panel-default">
+    <!-- GROUP HEADING -->
+    <div class="panel-heading collapsed" data-toggle="collapse" data-parent="#accordion-{{../group}}" href="#{{../category}}_{{../group}}_{{id}}">
+      <h4 class="panel-title">
+        <table><tr>
+          <td>
+            <span class="icon-arrow {{outlook.className}} outlook"></span>
+          </td> 
+          <td class="title">{{name}}</td>
+          <td class="open-close">
+            <span class="icon-plus"></span>
+            <span class="icon-minus"></span>
+          </td>
+        </tr></table>
+      </h4>
+    </div>
+    <!-- GROUP BODY -->
+    <div id="{{../category}}_{{../group}}_{{id}}" class="panel-collapse collapse {{show}}">
+      <div class="panel-body">
+        <div class="history-chart" data-group="{{../group}}" data-subgroup="{{id}}" data-category="{{../category}}">
+          {{> history this}}
+        </div>
+
+        <!-- Group share -->
+        <div class="share">
+          <a class="btn btn-xs btn-default" href="?show={{../id}}&cat={{../category}}">Dela mig</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  {{/each}}
+</div>
