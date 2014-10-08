@@ -1,6 +1,7 @@
 (function() {
 	'use strict';
 	var spreadsheetUrl = '1JGCoMlEqUaspT-S_7UK-lVK8JfzHItdHyUQO_LYdFus';
+  var baseUrl = 'http://unionenopinion.se/konjunkturbarometern-test';
 	var data = {};
 	var dictionary;
 	var $cards;

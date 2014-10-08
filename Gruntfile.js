@@ -193,7 +193,8 @@ module.exports = function (grunt) {
             '<%= config.dist %>/styles/{,*/}*.css',
             '<%= config.dist %>/images/{,*/}*.*',
             //'<%= config.dist %>/styles/fonts/{,*/}*.*',
-            '<%= config.dist %>/*.{ico,png}'
+            '<%= config.dist %>/*.{ico,png}',
+            '!<%= config.dist %>/scripts/vendor/jquery.responsiveiframe.min.js'
           ]
         }
       }
@@ -317,6 +318,12 @@ module.exports = function (grunt) {
           cwd: '<%= config.app %>/',
           src: 'templates/*.hbs',
           dest: '<%= config.dist %>/'
+        }, {
+          // Copy responsive iframe lib "manually"
+          expand: true,
+          cwd: 'bower_components/responsiveiframe/dist',
+          src: 'responsiveiframe.min.js',
+          dest: '<%= config.dist %>/scripts/vendor'
         }]
       },
       styles: {
@@ -366,22 +373,9 @@ module.exports = function (grunt) {
           exclude: ['jquery']
         }
       }
-    },
-    requirejs: {
-      compile: {
-        options: {
-          baseUrl: "<%= config.app %>",
-          mainConfigFile: "<%= config.app %>/config.js",
-          name: "../bower_components/almond/almond", // assumes a production build using almond
-          out: "<%= config.app %>/konjunkturbarometern.min.js",
-          include: ['d3','handlebars','modernizr','tabletop','bootstrap','app'],
-          wrapShim: true
-        }
-      }
     }
   });
 
-  grunt.loadNpmTasks('grunt-bower-requirejs');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
 
