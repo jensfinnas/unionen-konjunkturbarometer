@@ -1,4 +1,13 @@
-<h4 class="hide-in-overview"><span class="trend"></span></h4>
+<h4 class="hide-in-overview">Så här har det sett ut tidigare</h4>
+{{#each this}}
+  <div class="item hide-in-overview">
+    <div class="icon">
+     <span class="icon-arrow {{getOutlook value 'className'}} outlook"></span>
+   </div>
+   <div class="date">{{formatDate date}}</div>
+  </div>
+{{/each}}
+<!-- 
 <div class="card-row">
   <div class="cell icon">
     <div class="chart"></div>
@@ -8,3 +17,4 @@
     <span class="value"></span>
   </div>
 </div>
+-->

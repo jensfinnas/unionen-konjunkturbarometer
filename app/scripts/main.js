@@ -13,7 +13,19 @@
 	});
 	Handlebars.registerHelper('toLowerCase', function(str) {
 		return str.toLowerCase();
-	})
+	});
+    Handlebars.registerHelper('formatDate', function(date) {
+        if (typeof date !== "undefined") {
+            return capitalise(formatDateMonthYear(date));
+        }
+        return "";
+    });
+    Handlebars.registerHelper('getOutlook', function(value, key) {
+      if (typeof value !== "undefined") {
+        return getOutlookCategory(value)[key];
+      }
+      return "";
+    });
     Handlebars.registerHelper('latestUpdate', function(str) {
         var date = parseDate($('#latest-update date').attr('value'));
         return formatDateString(date);
@@ -36,13 +48,13 @@ function getStyleRuleValue(style, selector, sheet) {
 	}
 
 	var expectationCategories =[ 
-	{ v0: 10.45, v1: 12.5, label: 'Väldigt optimistisk', labelDetermined: 'Väldigt optimistiskt', className: 'p3'},
-	{ v0: 5.45, v1: 10.45, label: 'Optimistisk', labelDetermined: 'Optimistiskt', className: 'p2'},
-	{ v0: 0.45, v1: 5.45, label: 'Försiktigt optimistisk', labelDetermined: 'Försiktigt optimistiskt', className: 'p1'},
-	{ v0: -0.45, v1: 0.45, label: 'Neutral', labelDetermined: 'Neutralt', className: 'neutral'},
-	{ v0: -5.45, v1: -0.45, label: 'Försiktigt pessimistisk', labelDetermined: 'Försiktigt pessimistiskt', className: 'n1'},
-	{ v0: -10.45, v1: -5.45, label: 'Pessimistisk', labelDetermined: 'Pessimistiskt', className: 'n2'},
-	{ v0: -12.5, v1: -10.45, label: 'Väldigt pessimistisk', labelDetermined: 'Väldigt pessimistiskt', className: 'n3'}
+	{ v0: 10.45, v1: 12.5, label: 'Tydligt förbättrad', labelDetermined: 'Tydligt förbättrad', className: 'p3'},
+	{ v0: 5.45, v1: 10.45, label: 'Förbättrad', labelDetermined: 'Förbättrad', className: 'p2'},
+	{ v0: 0.45, v1: 5.45, label: 'Något förbättrad', labelDetermined: 'Något förbättrad', className: 'p1'},
+	{ v0: -0.45, v1: 0.45, label: 'Oförändrad', labelDetermined: 'Oförändrad', className: 'neutral'},
+	{ v0: -5.45, v1: -0.45, label: 'Något försämrad', labelDetermined: 'Något försämrad', className: 'n1'},
+	{ v0: -10.45, v1: -5.45, label: 'Försämrad', labelDetermined: 'Försämrad', className: 'n2'},
+	{ v0: -12.5, v1: -10.45, label: 'Tydligt försämrad', labelDetermined: 'Tydligt försämrad', className: 'n3'}
 	]
 	// Add color property
 	.map(function(d) {
@@ -171,11 +183,12 @@ function getStyleRuleValue(style, selector, sheet) {
 	  "shortMonths": ["jan", "feb", "mars", "apr", "maj", "jun", "jul", "aug", "sept", "okt", "nov", "dec"]
 	});
 	var dateMonthYearFormat = locale.timeFormat("%B %Y");
-    var formatDateString = locale.timeFormat("%e %B %Y");
+  var formatDateString = locale.timeFormat("%e %B %Y");
 
 
 	var parseDate = locale.timeFormat("%Y-%m-%d").parse;
-    var formatDate = locale.timeFormat("%Y-%m-%d");
+  var formatDate = locale.timeFormat("%Y-%m-%d");
+  var formatDateMonthYear = locale.timeFormat("%b %Y");
 
 
 	// KONJUNKTUBAROMETERN FUNCTIONS
@@ -201,7 +214,7 @@ function getStyleRuleValue(style, selector, sheet) {
     	top: mini ? 0 : 3, 
     	bottom: mini ? 0 : 30, 
     	right: mini ? 0 : 15, 
-    	left: 5
+    	left: mini ? 3 : 5
     };
     var m = self.margin;
     self.width = w = (containerWidth - m.left - m.right);
@@ -215,8 +228,8 @@ function getStyleRuleValue(style, selector, sheet) {
     self.date0 = date0 = data[data.length - 1]['date']; // Oldest
 
     // Set value range (y axis)
-    self.min = mini ? -6 : -9;
-    self.max = mini ? 6 : 9;
+    self.min = mini ? -6 : -12;
+    self.max = mini ? 6 : 12;
 
 
     // Define x- and y-scale
@@ -299,7 +312,7 @@ function getStyleRuleValue(style, selector, sheet) {
     .attr("y1", function(d) { return d.v1 >0 ? 0 : self.y(d.v0) - self.y(d.v1); })
     .attr("y2", function(d) { return d.v1 >0 ? 0 : self.y(d.v0) - self.y(d.v1); })
     .attr("stroke", function(d) { return d.color; })
-    .attr("class", "guideline");
+    .attr("class", "guideline hide-in-overview");
 
     // Hack: Add extra neutral line
     self.chart.selectAll('.bg-area.line-neutral').append("line")
@@ -308,8 +321,7 @@ function getStyleRuleValue(style, selector, sheet) {
     	.attr("y1", function(d) { return self.y(d.v0) - self.y(d.v1); })
     	.attr("y2", function(d) { return self.y(d.v0) - self.y(d.v1); })
     	.attr("stroke", function(d) { return d.color; })
-    	.attr("class", "guideline");
-
+    	.attr("class", "guideline hide-in-overview");
 
     // Zero line
     self.chart.append("line")
@@ -448,16 +460,16 @@ function getStyleRuleValue(style, selector, sheet) {
     	var outlook = getOutlookCategory(valueNow);
     	var outlookNow = outlook.labelDetermined.toLowerCase();
     	// Compare the outlook now to 6 months ago
-    	var direction = valueNow > valueThen ? "postiv" : "negativ";
+    	var direction = valueNow > valueThen ? "optimistisk" : "pessimistisk";
     	var relation = (valueNow > valueThen && valueNow > 0) || 
     	(valueNow < valueThen && valueNow < 0) ? 
     	'även' : 'dock';
     	var amount;
     	// Describe the difference in outlook in words
     	var diff = Math.abs(valueNow - valueThen);
-    	if (diff < 0.5) { amount = "Marginellt"; }
-    	else if (diff < 1.5) { amount = "Något"; }
-      else if (diff < 2.5) { amount = ""; }
+    	if (diff < 0.5) { amount = "Lite"; }
+    	else if (diff < 1.5) { amount = "Ganska"; }
+        else if (diff < 2.5) { amount = "Mer"; }
     	else if (diff >= 2.5) { amount = "Betydligt"; }
 
     	var sentences = {};
@@ -492,7 +504,7 @@ function getStyleRuleValue(style, selector, sheet) {
 	    sentences.long += 'Man är '+relation+' <strong>' + amount + ' mer ' + direction + '</strong> än för sex månader sedan.';
 	    sentences.title = 'Trenden: ' + amount + ' mer ' + direction + ' än senast';
 	    sentences.trend = capitalise(amount + ' mer ') + direction;
-	    sentences.trendTitle = capitalise(amount + ' mer ') + direction + ' än senaste';
+	    sentences.trendTitle = capitalise(amount + ' mer ') + direction + ' än senast';
         return sentences;
 	  } 
 	  var sentences = self.getSentences(data, category, group, subgroup);
@@ -585,8 +597,6 @@ return HistoryChart;
 					.find('.history-chart').each(function() {
 						drawHistoryChart(this);
 					})
-
-
 
 				ri.messageParent();
 
@@ -884,7 +894,7 @@ return HistoryChart;
 		return show;
 	}
 
-		$(window).on('hashchange', function() {
+	 $(window).on('hashchange', function(event) {
 		  var show = parseHash();
 		  update(show);
 		});
@@ -894,6 +904,7 @@ return HistoryChart;
 				$('#konjunkturbarometern').html( t() );
 				$cards = $('#cards');
 				$nav = $('.nav');
+
 				$('.btn-back').click(function() { toggleCard($('.card.selected')); })
 				Tabletop.init({ 
 					key: spreadsheetUrl,

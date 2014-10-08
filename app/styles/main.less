@@ -150,11 +150,17 @@ h1, h2, h3, h4, h5, .nav li {
 					.wrapper {
 						padding-top: 20px;
 					}
-					h3 {
-						margin: 0;
-						.animate(0.3s);
-						font-weight: 400;
-						font-size: 16px;
+					a {
+						color: inherit;
+						h3 {
+							margin: 0;
+							.animate(0.3s);
+							font-weight: 400;
+							font-size: 16px;
+						}
+					}
+					a.back {
+						color: #428bca;
 					}
 				}
 				.card-section.current-outlook {
@@ -172,7 +178,6 @@ h1, h2, h3, h4, h5, .nav li {
 
 						.full-report-link {
 							margin-top: 10px;
-
 						}
 					}
 				}
@@ -450,9 +455,32 @@ h1, h2, h3, h4, h5, .nav li {
 
 // HISTORY CHART
 .history-chart {
+	// New layout
+	.item {
+		display: inline-block;
+		text-align: center;
+		margin: 5px;
+
+		.outlook {
+			font-size: 200%;
+		}
+		.date {
+			font-size: 80%;
+			text-transform: uppercase;
+			color: @color-grey-text;
+		}
+	}
+
+	// Old layout
+
 	.line {
 		fill: none;
 		stroke: #333;
+		stroke-width: 1px;
+	}
+	.guideline.zero {
+		stroke: #262626;
+		stroke-dasharray: 2, 2;
 		stroke-width: 1px;
 	}
 	.axis {
@@ -489,10 +517,7 @@ h1, h2, h3, h4, h5, .nav li {
 		.guideline {
 			stroke-width: 1px;
 		}
-		.guideline.zero {
-			stroke: @color-darkgrey;
-			stroke-dasharray: 5, 5;
-		}
+		
 		.y-label {
 			display: block;
 		}
