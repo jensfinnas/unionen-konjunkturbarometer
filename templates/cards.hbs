@@ -49,12 +49,12 @@
 				</div>
 			</div>
 			<!-- History chart -->
-			<div class="card-section trend">
+			<div class="card-section trend hide-in-overview">
 				<div class="wrapper">
 					<div class="history">
 						<!-- Get history chart template -->
 						<div class="history-chart" data-group="{{id}}"data-category="{{../category}}">
-							{{> history}}
+							{{> history values}}
 						</div>
 					</div>
 					<div class="full-report-link">
@@ -65,8 +65,8 @@
 
 			<div class="card-section full-report">
 				<div class="wrapper">
-					<h4 class="industry">Framtidstro på olika delar av verksamheten inom {{dictionary name 'determined' 'true'}}</h4>
-					<h4 class="category">Framtidstro på {{dictionary name 'determined' 'true'}} branschvis</h4>
+					<h4 class="industry">Nyckeltal inom {{dictionary name 'determined' 'true'}}</h4>
+					<h4 class="category">{{dictionary name 'determined' 'false'}} branschvis</h4>
 					<div class="subgroups"></div>
 				</div>
 			</div>
