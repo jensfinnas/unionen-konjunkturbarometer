@@ -1,11 +1,17 @@
-<h4 class="hide-in-overview">Så här har det sett ut tidigare</h4>
+<h4 class="hide-in-overview">Tidigare mätningar</h4>
+<div class="description">
+  <span>
+    Var sjätte månad frågar Unionen sina klubbar om hur de ser på det kommande halvåret i förhållande till det som varit. 
+  </span>
+</div>
 {{#each this}}
-  <div class="item hide-in-overview">
+  <div class="item hide-in-overview" data-toggle="tooltip" data-placement="top" title="{{getOutlook value 'label'}}">
     <div class="icon">
      <span class="icon-arrow {{getOutlook value 'className'}} outlook"></span>
    </div>
    <div class="date">{{formatDate date}}</div>
   </div>
+  
 {{/each}}
 <!-- 
 <div class="card-row">
