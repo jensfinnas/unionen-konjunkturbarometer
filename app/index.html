@@ -75,6 +75,17 @@
       r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
       ga('create','UA-XXXXX-X');ga('send','pageview');
     </script>-->
+    <!-- Facebook init -->
+    <script>
+    jQuery(document).ready(function() {
+      jQuery.ajaxSetup({ cache: true });
+      jQuery.getScript('//connect.facebook.net/sv_SE/all.js', function(){
+        FB.init({
+          appId: '734208579940382',
+        });     
+      });
+    });
+    </script>
 
         <!-- build:js(.) scripts/plugins.js -->
         <script src="bower_components/bootstrap/js/affix.js"></script>

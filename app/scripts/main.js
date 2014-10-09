@@ -193,6 +193,109 @@ function getStyleRuleValue(style, selector, sheet) {
 
 
 	// KONJUNKTUBAROMETERN FUNCTIONS
+  function getShareTexts($el) {
+    return {
+      msg: $el.attr('data-msg'),
+      urlToShare: baseUrl + '?show=' + $el.attr('data-id')
+    }
+  }
+  function initShareButtons() {
+      // Init share buttons
+      $('.twitter').click(function() {
+        var $el = $(this);
+        var share = getShareTexts($el);
+        var tweet = share.msg + ' @Unionen ';
+        var twitterUrl =  'http://twitter.com/share?url='+share.urlToShare+'&text='+encodeURIComponent(tweet);
+        var width  = 575,
+            height = 400,
+            left   = (jQuery(window).width()  - width)  / 2,
+            top    = (jQuery(window).height() - height) / 2,
+            url    = share.urlToShare,
+            opts   = 'status=1' +
+                     ',width='  + width  +
+                     ',height=' + height +
+                     ',top='    + top    +
+                     ',left='   + left;
+
+        window.open(twitterUrl, 'twitter', opts);
+
+        return false;
+      })
+
+      $('.facebook').click(function() {
+        var share = getShareTexts($(this));
+        var title = share.msg;
+        var description = "En längre beskrivning";
+
+        FB.ui({
+          method: 'feed',
+          name: title,
+          link: share.urlToShare,
+          picture: '',
+          caption: '',
+          description: description 
+        });
+        return false;
+      })
+
+      $('.email').click(function() {
+        var $el = $(this);
+        var share = getShareTexts($el);
+        window.location.href = "mailto:din@kompis.com?subject=" + share.msg + "&body=" + share.urlToShare;
+      })
+      /*
+      var $interactiveChart = jQuery(".interactive-chart");
+      var message = jQuery("meta[name=description]").attr("content");
+      var subject = $interactiveChart.find(".subject .selected").val();
+      var comparedTo = $interactiveChart.find(".compared-to .selected").val();
+      var baseUrl = typeof $interactiveChart.attr("data-share-url") == "undefined" ?
+        "http://bottenada.se/?" : $interactiveChart.attr("data-share-url");
+      var urlToShare = baseUrl
+        + "subject=" + subject.join(",") + "&"
+        + "comparedTo=" + (isNumeric(comparedTo) ? comparedTo : comparedTo.join(","));
+      var question = "Blir " + formatSubject(subject) + " större än " + formatSubject(comparedTo) + "?";
+      var shortAnswer = $interactiveChart.find(".short-answer").first().text();
+      var longAnswer = $interactiveChart.find(".long-answer").last().text();
+      var percent =  1 - charts['interactive-prob-chart'].percent;
+      var tweet = question + " " + shortAnswer.replace(".","") + " (" + formatPercent(percent) + " sannolikhet). @BottenAda" ;
+      
+      var fbTitle = "Fråga Ada: " + question;
+      var fbSummary = shortAnswer + " " + longAnswer;
+      
+      
+      $interactiveChart.find('.fa-facebook').off('click').on('click', function() {
+        FB.ui({
+          method: 'feed',
+          name: fbTitle,
+          link: urlToShare,
+          picture: 'http://bottenada.se/wp-content/themes/wp-bootstrap/library/img/ada.png',
+          caption: '',
+          description: fbSummary 
+        });
+        return false;
+      });
+
+      var twitterUrl =  'http://twitter.com/share?url=&text='+encodeURIComponent(tweet + " "+urlToShare);
+      $interactiveChart.find('.fa-twitter').attr({
+        "href": twitterUrl
+      }).off('click').on('click', function(event) {
+        var width  = 575,
+            height = 400,
+            left   = (jQuery(window).width()  - width)  / 2,
+            top    = (jQuery(window).height() - height) / 2,
+            url    = urlToShare,
+            opts   = 'status=1' +
+                     ',width='  + width  +
+                     ',height=' + height +
+                     ',top='    + top    +
+                     ',left='   + left;
+
+        window.open(twitterUrl, 'twitter', opts);
+
+        return false;
+      });*/
+  }
+
 	var HistoryChart = (function() {
 		function HistoryChart(opts) {
   		var self = this;
@@ -599,7 +702,11 @@ return HistoryChart;
 						drawHistoryChart(this);
 					})
 
+        // Resize iframe
 				ri.messageParent();
+
+        // Init share button events
+        initShareButtons();
 
 				update(parseHash());
 			})
