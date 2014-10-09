@@ -11,9 +11,7 @@
 
 					<!-- Full report title -->
 					
-
-					<h3 class="full-report-title hide-in-overview">
-						<div class="share pull-right">
+					<div class="share pull-right hide-in-overview">
 							<span class="icon-facebook facebook icon"
 								data-id="{{category}}_{{id}}"
 								data-msg="Dela på FB!">
@@ -26,20 +24,24 @@
 								data-id="{{category}}_{{id}}"
 								data-msg="Unionen: Konjunkturbarometern"
 							></span>
-						</div>
-						{{name}}
-						
-					</h3>
+					</div>
 					<a href="#{{category}}" class="back hide-in-overview">
 						<span class="icon-arrow-left"></span>Tillbaka till översikten
 					</a>
+					<h3 class="full-report-title hide-in-overview">
+						
+						{{dictionary name 'in_sentence' false}}
+						<small>{{dictionary name 'description' false}}</small>	
+					</h3>
+
+					
 
 				</div>
 			</div>
 			<!-- Outlook today -->
 			<div class="card-section current-outlook">
 				<div class="wrapper">
-					<h4 class="hide-in-overview">Framtidsutsikt: {{outlook.label}}</h4>
+					<!--<h4 class="hide-in-overview">Framtidsutsikt: {{outlook.label}}</h4>-->
 					<div class="card-row">
 						<div class="cell icon">
 							<span class="icon-arrow {{outlook.className}} outlook"></span>
@@ -50,10 +52,13 @@
 								<span class="value">{{outlook.label}}</span>
 							</div>
 
-							<div class="description">
-								<p>Den här branschen innefattar bla bla blad. Här kommer en beskrivning på branschen.</p>
-								<p>I vår senaste mätning den {{ latestUpdate }} bedömdes framtiden för {{dictionary name 'determined' 'true'}} som {{toLowerCase outlook.label }}.</p></div>
+							<!--<div class="description">
+								<p></p>
+								<p>I vår senaste mätning den {{ latestUpdate }} bedömdes framtiden för {{dictionary name 'determined' 'true'}} som {{toLowerCase outlook.label }}.</p></div>-->
 						</div>
+					</div>
+					<div class="full-report-link hide-in-full-report">
+						<a href="#{{category}}_{{id}}">Detaljerad rapport<span class="icon-arrow-right"></span></a>
 					</div>
 				</div>
 			</div>
@@ -64,15 +69,13 @@
 						<!-- Get history chart template -->
 						<div class="history-chart" data-group="{{id}}"data-category="{{../category}}">
 							{{> history values}}
+							
 						</div>
-					</div>
-					<div class="full-report-link">
-						<a href="#{{category}}_{{id}}">Detaljerad rapport<span class="icon-arrow-right"></span></a>
 					</div>
 				</div>
 			</div>
 
-			<div class="card-section full-report">
+			<div class="card-section full-report hide-in-overview">
 				<div class="wrapper">
 					<h4 class="industry">Nyckeltal inom {{dictionary name 'determined' 'true'}}</h4>
 					<h4 class="category">{{dictionary name 'determined' false}} branschvis</h4>

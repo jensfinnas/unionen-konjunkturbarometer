@@ -14,6 +14,14 @@ h5,
 .nav li {
   font-family: "Helvetica Neue", Helvetica, sans-serif;
 }
+h1 {
+  font-size: 24px;
+}
+@media screen and (min-width: 470px) {
+  h1 {
+    font-size: 34px;
+  }
+}
 .card:not(.selected) .hide-in-overview {
   display: none !important;
 }
@@ -31,7 +39,31 @@ h5,
   color: #328032;
 }
 #header .wrapper .subtitle {
-  font-size: 150%;
+  font-size: 15px;
+}
+#header .wrapper .total-outlook {
+  display: inline-block;
+  margin-top: 15px;
+}
+#header .wrapper .total-outlook .outlook {
+  font-size: 40px;
+}
+#header .wrapper .total-outlook .overview {
+  font-size: 14px;
+  padding-left: 8px;
+  text-align: left;
+}
+@media screen and (min-width: 470px) {
+  #header .wrapper .subtitle {
+    font-size: 18px;
+  }
+  #header .wrapper .total-outlook .outlook {
+    font-size: 50px;
+  }
+  #header .wrapper .total-outlook .overview {
+    font-size: 17px;
+    padding-left: 10px;
+  }
 }
 .nav {
   border-bottom: 0;
@@ -84,24 +116,12 @@ h5,
   border-radius: 5px;
   border: 1px solid #d2d2d2;
   background-color: #fff;
-  /*.card-section {
-					h4 {
-						display: none;
-					}
-				}*/
 }
 .content #cards .card .card-wrapper .card-section {
   border-bottom: 1px solid #f8f8f8;
 }
 .content #cards .card .card-wrapper .card-section .wrapper {
   padding: 15px;
-}
-.content #cards .card .card-wrapper .card-section .wrapper label {
-  text-transform: uppercase;
-  font-size: 70%;
-  color: #979797;
-  display: block;
-  margin-bottom: 0;
 }
 .content #cards .card .card-wrapper .card-section.title .wrapper {
   padding-top: 20px;
@@ -131,21 +151,13 @@ h5,
 .content #cards .card .card-wrapper .card-section.trend .wrapper {
   padding-bottom: 15px;
 }
-.content #cards .card .card-wrapper .card-section.trend .wrapper .full-report-link {
+.content #cards .card .card-wrapper .full-report-link {
   margin-top: 10px;
 }
-.content #cards .card .card-wrapper .card-section.full-report {
-  display: none;
-}
-.content #cards .card .card-wrapper .card-row {
-  display: table;
-}
-.content #cards .card .card-wrapper .card-row .cell {
-  display: table-cell;
-  vertical-align: middle;
-}
-.content #cards .card .card-wrapper .card-row .cell.icon {
-  width: 58px;
+.content #cards .card h4 {
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: bold;
 }
 .content #cards .card.selected {
   width: 100%;
@@ -153,28 +165,29 @@ h5,
 }
 .content #cards .card.selected .card-section.title h3 {
   font-size: 200%;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
 }
-.content #cards .card.selected .card-section.title .overview-title {
-  display: none;
+.content #cards .card.selected .card-section.title h3 small {
+  display: block;
+  margin-top: 7px;
+  line-height: 1.4em;
+  font-size: 13px;
+  color: inherit;
 }
 .content #cards .card.selected .card-section.title .full-report-title .back {
   font-size: 13px;
 }
-.content #cards .card.selected .card-section.title .full-report-title .share {
-  font-size: 70%;
+.content #cards .card.selected .card-section.title .share {
+  font-size: 15px;
 }
-.content #cards .card.selected .card-section.current-outlook .cell {
-  vertical-align: top;
+.content #cards .card.selected .card-section.current-outlook .card-row {
+  font-size: 140%;
 }
 .content #cards .card.selected .card-section.current-outlook .description {
   display: block;
 }
 .content #cards .card.selected .card-section.current-outlook .description p {
   margin-bottom: 3px;
-}
-.content #cards .card.selected .card-section.current-outlook .overview {
-  display: none;
 }
 .content #cards .card.selected .card-section.trend .cell.description {
   display: none;
@@ -184,6 +197,10 @@ h5,
 }
 .content #cards .card.selected .card-section.full-report {
   display: block;
+}
+.content #cards .card.selected .card-section.full-report .subgroups h4 {
+  font-size: 13px;
+  font-weight: bold;
 }
 .content #cards .card.selected .card-section h4 {
   display: block;
@@ -202,10 +219,43 @@ h5,
 }
 .content .share .icon {
   cursor: pointer;
+  margin: 4px;
+}
+.content .share .icon-twitter {
+  color: #63AEEB;
+}
+.content .share .icon-facebook {
+  color: #4862A3;
+}
+.card-row {
+  display: table;
+}
+.card-row .cell {
+  display: table-cell;
+  vertical-align: middle;
+}
+.card-row .cell.icon {
+  width: 58px;
+}
+.card-row label {
+  text-transform: uppercase;
+  font-size: 70%;
+  color: #979797;
+  display: block;
+  margin-bottom: 0;
 }
 @media screen and (min-width: 470px) {
   .content #cards .card {
     width: 50%;
+  }
+  .content #cards .card .card-section:first-of-type {
+    border-bottom: 0;
+  }
+  .content #cards .card .card-section:first-of-type .wrapper {
+    padding-bottom: 5px;
+  }
+  .content #cards .share {
+    font-size: 18px !important;
   }
 }
 .accordion,
@@ -285,7 +335,7 @@ h5,
 .modal .panel .modal-header .outlook,
 .accordion .modal-content .modal-header .outlook,
 .modal .modal-content .modal-header .outlook {
-  font-size: 300%;
+  font-size: 32px;
   margin-right: 10px;
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
@@ -308,13 +358,14 @@ h5,
 .modal .panel .modal-header .modal-title,
 .accordion .modal-content .modal-header .modal-title,
 .modal .modal-content .modal-header .modal-title {
-  font-size: 115%;
+  font-size: 105%;
   line-height: 1.2em;
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
   -ms-transition: all 0.3s ease;
   font-weight: 400;
+  text-transform: none;
 }
 .accordion .panel .panel-heading .title .outlook-label,
 .modal .panel .panel-heading .title .outlook-label,
@@ -386,17 +437,11 @@ h5,
   border-bottom: 1px solid #f8f8f8;
   background-color: #fff;
 }
-.accordion .panel .panel-heading.collapsed .title,
-.modal .panel .panel-heading.collapsed .title,
-.accordion .modal-content .panel-heading.collapsed .title,
-.modal .modal-content .panel-heading.collapsed .title {
-  font-size: 90%;
-}
 .accordion .panel .panel-heading.collapsed .outlook,
 .modal .panel .panel-heading.collapsed .outlook,
 .accordion .modal-content .panel-heading.collapsed .outlook,
 .modal .modal-content .panel-heading.collapsed .outlook {
-  font-size: 160%;
+  font-size: 28px;
   display: inline-block;
 }
 .accordion .panel .panel-heading.collapsed .icon-minus,
@@ -533,14 +578,14 @@ h5,
 .history-chart .item {
   display: inline-block;
   text-align: center;
-  margin: 5px;
+  padding: 3px;
+  margin: 3px;
 }
 .history-chart .item .outlook {
   font-size: 200%;
 }
 .history-chart .item .date {
   font-size: 80%;
-  text-transform: uppercase;
   color: #999999;
 }
 .history-chart .line {
@@ -588,6 +633,9 @@ h5,
 }
 .card.selected .history-chart .chart {
   padding: 10px 0;
+}
+.card.selected .history-chart .description {
+  margin-bottom: 12px;
 }
 .d3-tooltip {
   padding: 7px 10px;

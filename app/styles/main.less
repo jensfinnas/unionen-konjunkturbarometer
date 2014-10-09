@@ -50,6 +50,16 @@ body {
 h1, h2, h3, h4, h5, .nav li {
 	font-family: "Helvetica Neue", Helvetica, sans-serif;	
 }
+h1 {
+	font-size: 24px;
+}
+
+@media screen and (min-width: @screen-sm-min) {
+	h1 {
+		font-size: 34px;
+	}
+}
+
 // Helpers
 .card:not(.selected) .hide-in-overview {
 	display: none !important;
@@ -57,6 +67,7 @@ h1, h2, h3, h4, h5, .nav li {
 .card.selected .hide-in-full-report {
 	display: none !important;
 }
+
 
 
 #header {
@@ -70,11 +81,48 @@ h1, h2, h3, h4, h5, .nav li {
 			color: @color-green;
 		}
 		.subtitle {
-			font-size: 150%;
+			font-size: 15px;
+		}
+
+		.total-outlook {
+			display: inline-block;
+			margin-top: 15px;
+			.outlook {
+				font-size: 40px;
+				
+			}
+			.overview {
+				font-size: 14px;
+				padding-left: 8px;
+				text-align: left;
+			}
 		}
 
 	}
 }
+@media screen and (min-width: @screen-sm-min) {
+	#header {
+		.wrapper {
+			.subtitle {
+				font-size: 18px;
+			}
+			.total-outlook {
+
+				.outlook {
+					font-size: 50px;
+					
+				}
+				.overview {
+					font-size: 17px;
+					padding-left: 10px;
+				}
+			}
+		}
+	}
+	
+
+}
+
 .nav {
 	border-bottom: 0;
 	text-align: center;
@@ -136,14 +184,6 @@ h1, h2, h3, h4, h5, .nav li {
 					.wrapper {
 						padding: 15px;
 
-						label {
-							text-transform: uppercase;
-							font-size: 70%;
-							color: #979797;
-							display: block;
-							margin-bottom: 0;
-						}
-
 					}
 				}
 				.card-section.title {
@@ -175,34 +215,17 @@ h1, h2, h3, h4, h5, .nav li {
 				.card-section.trend {
 					.wrapper {
 						padding-bottom: 15px;
-
-						.full-report-link {
-							margin-top: 10px;
-						}
 					}
 				}
 
-				.card-section.full-report {
-					display: none;
+				.full-report-link {
+					margin-top: 10px;
 				}
-
-				// Hide h4 headings 
-				/*.card-section {
-					h4 {
-						display: none;
-					}
-				}*/
-
-				.card-row {
-					display: table;
-					.cell {
-						display: table-cell;
-						vertical-align: middle;
-					}
-					.cell.icon {
-						width: 58px;
-					}
-				}
+			}
+			h4 {
+				text-transform: uppercase;
+				font-size: 13px;
+				font-weight: bold;
 			}
 		}
 
@@ -214,23 +237,30 @@ h1, h2, h3, h4, h5, .nav li {
 			.card-section.title {
 				h3 {
 					font-size: 200%;
-					margin-bottom: 10px;
+					margin-bottom: 0px;
+
+					small {
+						display: block;
+						margin-top: 7px;
+						line-height: 1.4em;
+						font-size: 13px;
+						color: inherit;
+					}
 				}
-				.overview-title {
-					display: none;
-				}
+
 				.full-report-title {
 					.back {
 						font-size: 13px;
 					}
-					.share {
-						font-size: 70%;
-					}
+				}
+				.share {
+					font-size: 15px;
 				}
 			}
 			.card-section.current-outlook {
-				.cell {
-					vertical-align: top;
+				
+				.card-row {
+					font-size: 140%;
 				}
 				.description {
 					display: block;
@@ -238,9 +268,6 @@ h1, h2, h3, h4, h5, .nav li {
 					p {
 						margin-bottom: 3px;
 					}
-				}
-				.overview {
-					display: none;
 				}
 			}
 			.card-section.trend {
@@ -253,6 +280,13 @@ h1, h2, h3, h4, h5, .nav li {
 			}
 			.card-section.full-report {
 				display: block;
+
+				.subgroups {
+					h4 {
+						font-size: 13px;
+						font-weight: bold;
+					}
+				}
 
 			}
 			.card-section {
@@ -284,7 +318,33 @@ h1, h2, h3, h4, h5, .nav li {
 	.share {
 		.icon {
 			cursor: pointer;
+			margin: 4px;
 		}
+		.icon-twitter {
+			color: #63AEEB;
+		}
+		.icon-facebook {
+			color: #4862A3;
+		}
+	}
+}
+// Outlook icon and text
+.card-row {
+	display: table;
+	.cell {
+		display: table-cell;
+		vertical-align: middle;
+
+	}
+	.cell.icon {
+		width: 58px;
+	}
+	label {
+		text-transform: uppercase;
+		font-size: 70%;
+		color: #979797;
+		display: block;
+		margin-bottom: 0;
 	}
 }
 // Cards: Media queries
@@ -293,6 +353,15 @@ h1, h2, h3, h4, h5, .nav li {
 		#cards {
 			.card {
 				width: 50%;
+				.card-section:first-of-type {
+					border-bottom: 0;
+					.wrapper {
+						padding-bottom: 5px;
+					}
+				}
+			}
+			.share {
+				font-size: 18px !important;
 			}
 		}
 	}
@@ -332,22 +401,24 @@ h1, h2, h3, h4, h5, .nav li {
 
 			// Outlook
 			.outlook {
-				font-size: 300%;
+				font-size: 32px;
 				margin-right: 10px;
 				.animate(0.3s);
 			}
 
 			// Text
 			.title, .modal-title {
-				font-size: 115%;
+				font-size: 105%;
 				line-height: 1.2em;
 				.animate(0.3s);
 				font-weight: 400;
+				text-transform: none;
 
 				.outlook-label {
 					font-size: 80%;
 					display: block;
 					color: @color-grey-text;
+
 				}
 			}
 
@@ -371,11 +442,11 @@ h1, h2, h3, h4, h5, .nav li {
 			background-color: #fff;
 			
 			.title {
-				font-size: 90%;
+				//font-size: 90%;
 			}
 
 			.outlook {
-				font-size: 160%;
+				font-size: 28px;
 				display: inline-block;
 			}
 
@@ -465,14 +536,14 @@ h1, h2, h3, h4, h5, .nav li {
 	.item {
 		display: inline-block;
 		text-align: center;
-		margin: 5px;
+		padding: 3px;
+		margin: 3px;
 
 		.outlook {
 			font-size: 200%;
 		}
 		.date {
 			font-size: 80%;
-			text-transform: uppercase;
 			color: @color-grey-text;
 		}
 	}
@@ -529,6 +600,10 @@ h1, h2, h3, h4, h5, .nav li {
 		}
 		.chart {
 			padding: 10px 0;
+		}
+
+		.description {
+			margin-bottom: 12px;
 		}
 	}
 }
