@@ -200,6 +200,9 @@ h5,
 .content .card.category .category {
   display: inherit;
 }
+.content .share .icon {
+  cursor: pointer;
+}
 @media screen and (min-width: 470px) {
   .content #cards .card {
     width: 50%;
