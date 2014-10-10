@@ -8,12 +8,28 @@
       e.src='//www.google-analytics.com/analytics.js';
       r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
       ga('create','UA-XXXXX-X');ga('send','pageview');
-    </script>--> <!-- Facebook init --> <script>jQuery(document).ready(function() {
+    </script>--> <!-- Facebook init --> <!--<script>
+    jQuery(document).ready(function() {
       jQuery.ajaxSetup({ cache: true });
       jQuery.getScript('//connect.facebook.net/sv_SE/all.js', function(){
         FB.init({
           appId: '734208579940382',
         });     
       });
-    });</script> <script src=scripts/cb7562c6.plugins.js></script> <script src=scripts/8b20d528.main.js></script> <script>var ri = responsiveIframe();
+    });
+    </script>--> <script>window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '647501952029201',
+          xfbml      : true,
+          version    : 'v2.1'
+        });
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/sv_SE/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));</script> <script src=scripts/cb7562c6.plugins.js></script> <script src=scripts/37136b11.main.js></script> <script>var ri = responsiveIframe();
       ri.allowResponsiveEmbedding();</script>  
