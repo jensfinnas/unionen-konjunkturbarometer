@@ -437,7 +437,15 @@ function getStyleRuleValue(style, selector, sheet) {
 				$nav = $('.nav');
 
 				$('.btn-back').click(function() { toggleCard($('.card.selected')); })
-				$.getJSON('data.json', function(resp) {
+        
+        // Show the production version as default
+        // Set preview=1 to show the version based on preview data
+        var version = 'production';
+        if (queryString.preview == "1" || queryString.preview == "true") {
+          version = 'stage';
+          $('.preview').removeClass('hidden');
+        }
+				$.getJSON('https://s3-eu-west-1.amazonaws.com/tabletop-proxy/unionen-konjunkturbarometern-' + version + '/' + spreadsheetUrl + '.json', function(resp) {
           initChart(resp);
         })
         /*Tabletop.init({ 
