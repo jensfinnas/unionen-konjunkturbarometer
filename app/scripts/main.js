@@ -325,7 +325,7 @@ function getStyleRuleValue(style, selector, sheet) {
 
           filter += '.selected';
           $cards.isotope({ filter: filter });
-                  ri.messageParent();
+            ri.messageParent();
         })
       }
       else {

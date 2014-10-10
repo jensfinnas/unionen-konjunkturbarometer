@@ -322,7 +322,7 @@ module.exports = function (grunt) {
           // Copy responsive iframe lib "manually"
           expand: true,
           cwd: 'bower_components/responsiveiframe/dist',
-          src: 'responsiveiframe.min.js',
+          src: '*.min.js',
           dest: '<%= config.dist %>/scripts/vendor'
         }]
       },
