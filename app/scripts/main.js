@@ -6,6 +6,11 @@
 	var dictionary;
 	var $cards;
 	var $nav;
+  var $iframe;
+  var iframePos = 0, cardsPos; // Needed to get correct scroll position
+  // Check if page is inside iframe
+  //var embeded = window.location != window.parent.location;
+
 
   Handlebars.registerHelper('dictionary', function(str, column, toLowerCase) {
     str = dictionary.get(toClassName(str))[column];
@@ -195,6 +200,7 @@ function getStyleRuleValue(style, selector, sheet) {
 	// KONJUNKTUBAROMETERN FUNCTIONS
   function getShareTexts($el) {
     return {
+      title: $el.attr('data-title'),
       msg: $el.attr('data-msg'),
       urlToShare: baseUrl + '?show=' + $el.attr('data-id')
     }
@@ -224,16 +230,14 @@ function getStyleRuleValue(style, selector, sheet) {
 
       $('.facebook').click(function() {
         var share = getShareTexts($(this));
-        var title = share.msg;
-        var description = "En längre beskrivning";
 
         FB.ui({
           method: 'feed',
-          name: title,
+          name: share.title,
           link: share.urlToShare,
           picture: '',
           caption: '',
-          description: description 
+          description: share.msg 
         });
         return false;
       })
@@ -266,16 +270,23 @@ function getStyleRuleValue(style, selector, sheet) {
             filter: '.foo'
           })
           // Init tooltips
-          .find('.item').tooltip()
-          /*.find('.history-chart').each(function() {
-            drawHistoryChart(this);
-          })*/
+          .find('.item').tooltip({container: 'body'});
+
 
         // Resize iframe
         ri.messageParent();
 
         // Init share button events
         initShareButtons();
+
+        //
+        //$iframe = $(window.parent.document);
+
+        // Get the position of the iframe
+        //if (embeded) iframePos = $iframe.find("#konjukturbarometer").offset().top;
+        
+        // Get position of cards
+        cardsPos = $('.content').offset().top;
 
         update(parseHash());
       })
@@ -300,6 +311,10 @@ function getStyleRuleValue(style, selector, sheet) {
       
       // Case: card is expanded
       if (show.group) {
+        // Scroll to top
+        /*$iframe.find('html,body')
+         .animate({ scrollTop: iframePos + cardsPos }, 500);*/
+
         var groupData = data.first(function(d) {
           return show.group == d.id;
         })
@@ -316,11 +331,19 @@ function getStyleRuleValue(style, selector, sheet) {
               group: show.group,
               groups: groupData.subgroups
             }))
+            // Resize iframe on collapse
+            .find('.accordion').on('shown.bs.collapse', function(ev) {
+              // Hack: Due to isotope cards container has to be expanded manually
+              $cards.height($cards.height() + ev.target.offsetHeight);
+              ri.messageParent();
+              
+            }).on('hide.bs.collapse', function(ev) {
+              $cards.height($cards.height() - ev.target.offsetHeight);
+              ri.messageParent()
+            })
             // Init tooltips
-            .find('.item').tooltip();
-            /*.find('.history-chart').each(function() {
-              drawHistoryChart(this);
-            });*/
+            .find('.item').tooltip({container: 'body'});
+            
 
 
           filter += '.selected';
