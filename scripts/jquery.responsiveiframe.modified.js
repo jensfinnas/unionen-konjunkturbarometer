@@ -68,7 +68,7 @@ if (typeof jQuery !== 'undefined') {
               } catch (ex) {}
             }
             if (settings.scrollToTop && r[2] === "s"){
-              scroll(0,elem[0].offsetTop + parseInt(r[3], 10));
+              scroll(0,elem[0].getBoundingClientRect().top + parseInt(r[3], 10));
             }
           }
         }
