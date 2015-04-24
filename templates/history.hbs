@@ -1,11 +1,16 @@
-<h4 class="hide-in-overview">Tidigare mätningar</h4>
+<h4 class="hide-in-overview">
+  Tidigare mätningar
+  <span class="has-tooltip" data-toggle="tooltip" data-placement="top" title="Vi gjorde om branschindelningen 2015 vilket gör att det saknas historik för en del branscher.">
+    {{#ifLessThan this.length '5' }}*{{/ifLessThan}}
+  </span>
+</h4>
 <div class="description">
   <span>
     Var sjätte månad frågar Unionen sina klubbar om hur de ser på det kommande halvåret i förhållande till det som varit. 
   </span>
 </div>
 {{#each this}}
-  <div class="item hide-in-overview" data-toggle="tooltip" data-placement="top" title="{{getOutlook value 'label'}}">
+  <div class="item has-tooltip hide-in-overview" data-toggle="tooltip" data-placement="top" title="{{getOutlook value 'label'}}">
     <div class="icon">
      <span class="icon-arrow {{getOutlook value 'className'}} outlook"></span>
    </div>

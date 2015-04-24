@@ -3,20 +3,27 @@
 	<div class="wrapper">
 		<h1>Branschbarometern</h1>
 		<div class="subtitle">Vart är Sveriges ekonomi på väg? Vi har frågat våra medlemsklubbar.</div>
-    <div class="total-outlook hidden">
+    <div class="total-outlook">
       <div class="card-row">
         <div class="cell icon">
-          <span class="icon-arrow outlook"></span>
+          <span class="icon-arrow outlook {{ latest.outlook.className }}"></span>
         </div>
         <div class="cell">
           <div class="overview">
             <label>Framtidsutsikt just nu:</label>
-            <span class="value"></span>
+            <span class="value">{{ latest.outlook.label }} jämfört med tidigare</span>
           </div>
         </div>
       </div>
     </div>
 	</div>
+  <button class="btn btn-link btn-xs" data-toggle="collapse" data-target="#total-outlook-history">
+    Visa historik
+  </button>
+  <div class="history-chart collapse" id="total-outlook-history">  
+    {{> history total}}
+  </div>
+
 </div>
 
 <!-- Tabs -->
@@ -51,3 +58,5 @@
 
 <!-- Latest update -->
 <div id="latest-update"></div>
+
+<div id="footnote">*) Vi gjorde om branschindelningen 2015 vilket gör att det saknas historik för en del branscher.</div>
